@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Robin's blog - postgres</title><link href="/" rel="alternate"></link><link href="/feeds/postgres.atom.xml" rel="self"></link><id>/</id><updated>2023-05-09T00:00:00+02:00</updated><subtitle>Software engineer</subtitle><entry><title>Protecting your postgres server from your application</title><link href="/protecting-your-postgres-server-from-your-application.html" rel="alternate"></link><published>2023-05-09T00:00:00+02:00</published><updated>2023-05-09T00:00:00+02:00</updated><author><name>Robin Kåveland</name></author><id>tag:None,2023-05-09:/protecting-your-postgres-server-from-your-application.html</id><summary type="html">&lt;p&gt;There are 2 configuration options that every OLTP application that uses postgres
+should set, in order to protect the database from high load:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;statement_timeout&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;idle_in_transaction_session_timeout&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These can both be set by client configuration and require no special
+permissions to set, and are easily overridden locally for transactions that have
+different …&lt;/p&gt;</summary><content type="html">&lt;p&gt;There are 2 configuration options that every OLTP application that uses postgres
+should set, in order to protect the database from high load:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;statement_timeout&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;idle_in_transaction_session_timeout&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These can both be set by client configuration and require no special
+permissions to set, and are easily overridden locally for transactions that have
+different requirements.&lt;/p&gt;
+&lt;p&gt;They can be a bit scary to retrofit to existing applications, but we can
+activate two postgres extensions to help us measure our queries to find safe
+values to set:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pg_stat_statements&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auto_explain&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;It's also a really good idea to monitor how many connections that are actively
+used on the database server. You may have integration with a good monitoring
+tool on the application side already, but if you don't, you can easily set
+up very useful monitoring by sampling the &lt;code&gt;pg_stat_activity&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;&lt;code&gt;statement_timeout&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;The &lt;a href="https://www.postgresql.org/docs/current/runtime-config-client.html"&gt;official documentation&lt;/a&gt;
+has this to say:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Abort any statement that takes more than the specified amount of time. If
+log_min_error_statement is set to ERROR or lower, the statement that timed out
+will also be logged. If this value is specified without units, it is taken as
+milliseconds. A value of zero (the default) disables the timeout.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Usually you want to set it in the application configuration, for example in the
+connection pool configuration. If you use
+&lt;a href="https://github.com/brettwooldridge/HikariCP#infrequently-used"&gt;HikariCP&lt;/a&gt; it
+makes sense to configure your pool with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;pool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setConnectionInitSql&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;set statement_timeout = 1000&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Any transaction can &lt;code&gt;set statement_timeout&lt;/code&gt; at any time, so if some queries must
+be allowed to run longer, it's easy to apply this setting locally (but remember
+to set it back to the default once you're done with the connection). It's not a
+good idea to set a database level default or server default, since it may
+interfere with migrations or analytical queries.&lt;/p&gt;
+&lt;p&gt;The effect of this is that any statement that causes a connection to postgres to
+be in an active state longer than &lt;code&gt;statement_timeout&lt;/code&gt; is canceled. This is
+important to set because if you don't have it, the database will keep chugging
+along even if the application gives up on the query, consuming hardware
+resources that might be required to complete other queries, causing everything
+to slow down. This kind of problem can be very difficult to debug, because
+code paths that aren't really problematic might start failing. It is much easier
+to figure out what's wrong if the problematic code path fails quickly.&lt;/p&gt;
+&lt;p&gt;Suppose the following happens:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Some result that needs to be sorted grows too large to be sorted in memory,
+   causing the database to sort using temporary files, slowing a query down
+   from a few milliseconds to many seconds.&lt;/li&gt;
+&lt;li&gt;A user requests a page that runs this query, and the page appears to hang.
+   The user waits a couple of seconds, then tries to refresh the page. This may
+   happen more than once.&lt;/li&gt;
+&lt;li&gt;At this point the database has N copies of the problematic query running,
+   each using lots of IO capacity. All N copies of the query and all other
+   queries that hit disk now contend to get IO time, slowing everything down to
+   a crawl. The database does not know that the application isn't interested in
+   the result of the first N - 1 copies of the query that the user canceled.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This is what &lt;code&gt;statement_timeout&lt;/code&gt; protects you against. Even if you set it to a
+high value like 2 seconds or 5 seconds, it's still valuable, to prevent 1 user
+from being able to use up all database server resources by accident, which they
+can easily do if they encounter a page that runs a pathologically bad query.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;statement_timeout&lt;/code&gt; will also cancel transactions that wait a long time to
+obtain locks, helping you prevent your connection pool from running out of
+connections if you have some accidental locking or queueing for locks.&lt;/p&gt;
+&lt;h2&gt;Setting &lt;code&gt;idle_in_transaction_session_timeout&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;This setting terminates connections that have started a transaction that
+did not either roll back or commit before the timeout occurs. A typical
+case of this might be that the application does some HTTP requests while
+holding an open transaction. If the application has taken locks in the database
+and forgot to set appropriate HTTP timeouts, this could cause pretty big
+problems for other traffic, so it's normally something you'd want to avoid just
+to be on the safe side. This setting can also be configured using &lt;code&gt;set&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;pool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setConnectionInitSql&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;set statement_timeout = 1000; set idle_in_transaction_session_timeout = 1000&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1&gt;Adding timeouts to an existing application&lt;/h1&gt;
+&lt;p&gt;By default both &lt;code&gt;statement_timeout&lt;/code&gt; and &lt;code&gt;idle_in_transaction_session_timeout&lt;/code&gt;
+are set to &lt;code&gt;0&lt;/code&gt;, which disables them. If you didn't read up on this before
+setting up the application, it might seem very scary to set these up after the
+fact. Don't worry though, there are helpful tools in postgres that you can use
+to identify good timeout values for your application, although you may need
+some help from a DBA to enable them.&lt;/p&gt;
+&lt;p&gt;There are two very useful postgres extensions that should be fairly
+uncontroversial to enable:&lt;/p&gt;
+&lt;h2&gt;&lt;a href="https://www.postgresql.org/docs/current/pgstatstatements.html"&gt;&lt;code&gt;pg_stat_statements&lt;/code&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;This extension can track a number of metrics about the queries that your
+application actually runs in your database, these are the most useful ones to
+know about:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;How many times the query is run&lt;/li&gt;
+&lt;li&gt;How much time does it take on average, the highest recorded runtime, the
+  standard deviation&lt;/li&gt;
+&lt;li&gt;How often does it cause a cache miss or spill something to temp files on disk&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you enable &lt;code&gt;pg_stat_statements.track_planning&lt;/code&gt;, it will also tell you how
+much time it takes to plan the query. You enable this extension in
+&lt;code&gt;postgresql.conf&lt;/code&gt;, for example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;shared_preload_libraries&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;pg_stat_statements&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;pg_stat_statements&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;track_planning&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;on&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;After it has been activated on the server, it needs to be &lt;code&gt;create&lt;/code&gt;d in the
+databases that you plan to monitor:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;create&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;extension&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;pg_stat_statements&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;There are many ways you can try to use this view to find out if you have queries
+that would be impacted by &lt;code&gt;statement_timeout&lt;/code&gt;. You can reset the stats by
+running:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;select&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;pg_stat_statements_reset&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that some queries will take a lot longer to execute immedately after a
+database restart, because many of the index and table files might not be in
+server RAM yet.&lt;/p&gt;
+&lt;h2&gt;&lt;a href="https://www.postgresql.org/docs/current/auto-explain.html"&gt;&lt;code&gt;auto_explain&lt;/code&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;This extension serves 2 very useful purposes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It will help you identify slow queries&lt;/li&gt;
+&lt;li&gt;It will go some way towards telling you why the query is slow by logging the
+  query plan&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There are a number of options you can configure here:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;auto_explain.log_min_duration&lt;/code&gt; the threshold, in milliseconds, that causes a
+  query to be &lt;code&gt;explained&lt;/code&gt; in the log&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auto_explain.log_analyze&lt;/code&gt; enables the &lt;code&gt;analyze&lt;/code&gt; option of &lt;code&gt;explain&lt;/code&gt; for the
+  output that ends up in the log. In short this will give you the actual row
+  counts of the different query plan nodes, and optionally also buffers and
+  timing. This can be costly on some hardware.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auto_explain.log_timing&lt;/code&gt; enables actual time taken for query plan nodes,
+  which is often very useful, but can also be very expensive. It does nothing
+  without&lt;code&gt;auto_explain.log_analyze&lt;/code&gt;. You can disable this to make
+  &lt;code&gt;auto_explain.log_analyze&lt;/code&gt; cheaper.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auto_explain.log_buffers&lt;/code&gt; will log enable the &lt;code&gt;buffers&lt;/code&gt; option for explain,
+  helping you identify whether the queries hit disk or read from the buffer
+  cache. This does nothing without &lt;code&gt;auto_explain.log_analyze&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Configuring both &lt;code&gt;pg_stat_statements&lt;/code&gt; and &lt;code&gt;auto_explain&lt;/code&gt; might look like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;shared_preload_libraries&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;pg_stat_statements,auto_explain&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;pg_stat_statements&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;track_planning&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;on&lt;/span&gt;
+&lt;span class="n"&gt;auto_explain&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log_min_duration&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;100ms&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;auto_explain&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log_analyze&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;on&lt;/span&gt;
+&lt;span class="n"&gt;auto_explain&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log_buffers&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;on&lt;/span&gt;
+&lt;span class="n"&gt;auto_explain&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log_timing&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;off&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Sampling &lt;code&gt;pg_stat_activity&lt;/code&gt; for monitoring&lt;/h2&gt;
+&lt;p&gt;The &lt;a href="https://www.postgresql.org/docs/current/monitoring-stats.html#MONITORING-PG-STAT-ACTIVITY-VIEWhttps://www.postgresql.org/docs/current/monitoring-stats.html#MONITORING-PG-STAT-ACTIVITY-VIEW"&gt;&lt;code&gt;pg_stat_activity&lt;/code&gt;&lt;/a&gt;
+view is an excellent target for monitoring your connection pools, but since it
+represents a snapshot in time, naively sampling it will hide peak connection
+usage. To some extent it's possible to improve this by taking samples more often
+but it's probably a better idea to make use of the &lt;code&gt;state_change&lt;/code&gt; column to find
+out how many columns that have been idle for the last sampling duration.&lt;/p&gt;
+&lt;p&gt;Suppose you sample every 10 seconds, then the following query will give you
+the count of connections that have been completely idle since the last sampling,
+which will help you estimate your free capacity:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;select&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;pg_stat_activity&lt;/span&gt;
+&lt;span class="k"&gt;where&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;state&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;idle&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;and&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;state_change&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;interval&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;10 seconds&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;You can easily add &lt;code&gt;group by datname, usename&lt;/code&gt; if you have multiple
+users/databases on the same database server.&lt;/p&gt;
+&lt;p&gt;Note that there are a lot of different kinds of problems that may cause increase
+usage of connections to the database, but the most common one will be queries
+that are run with inefficient query plans, where &lt;code&gt;auto_explain&lt;/code&gt; is a really good
+tool to help you figure out how to fix it.&lt;/p&gt;</content><category term="postgres"></category></entry></feed>

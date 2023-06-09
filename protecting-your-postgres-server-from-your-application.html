@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="/theme/stylesheet/style.min.css">
+
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="/theme/pygments/github.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="/theme/font-awesome/css/solid.css">
+
+
+
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Robin's blog Atom">
+
+
+
+ 
+
+<meta name="author" content="Robin Kåveland" />
+<meta name="description" content="There are 2 configuration options that every OLTP application that uses postgres should set, in order to protect the database from high load: statement_timeout idle_in_transaction_session_timeout These can both be set by client configuration and require no special permissions to set, and are easily overridden locally for transactions that have different …" />
+<meta name="keywords" content="">
+
+
+  <meta property="og:site_name" content="Robin's blog"/>
+  <meta property="og:title" content="Protecting your postgres server from your application"/>
+  <meta property="og:description" content="There are 2 configuration options that every OLTP application that uses postgres should set, in order to protect the database from high load: statement_timeout idle_in_transaction_session_timeout These can both be set by client configuration and require no special permissions to set, and are easily overridden locally for transactions that have different …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="/protecting-your-postgres-server-from-your-application.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2023-05-09 00:00:00+02:00"/>
+  <meta property="article:modified_time" content="2023-05-09 00:00:00+02:00"/>
+  <meta property="article:author" content="/author/robin-kaveland.html">
+  <meta property="article:section" content="postgres"/>
+  <meta property="og:image" content="/images/face.png">
+
+  <title>Robin's blog &ndash; Protecting your postgres server from your application</title>
+
+
+</head>
+<body class="light-theme">
+
+<aside>
+  <div>
+    <a href="/">
+      <img src="/images/face.png" alt="Robin Kåveland" title="Robin Kåveland">
+    </a>
+
+    <h1>
+      <a href="/">Robin Kåveland</a>
+    </h1>
+
+    <p>Software engineer</p>
+
+
+    <nav>
+      <ul class="list">
+
+
+            <li>
+              <a target="_self"
+                 href="/pages/about.html#about">
+                About
+              </a>
+            </li>
+
+      </ul>
+    </nav>
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/kaaveland"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-twitter"
+           href="https://twitter.com/robinkaveland"
+           target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="/">Home</a>
+
+
+  <a href="/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="protecting-your-postgres-server-from-your-application">Protecting your postgres server from your application</h1>
+    <p>
+      Posted on 2023-05-09 in <a href="/category/postgres.html">postgres</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <p>There are 2 configuration options that every OLTP application that uses postgres
+should set, in order to protect the database from high load:</p>
+<ul>
+<li><code>statement_timeout</code></li>
+<li><code>idle_in_transaction_session_timeout</code></li>
+</ul>
+<p>These can both be set by client configuration and require no special
+permissions to set, and are easily overridden locally for transactions that have
+different requirements.</p>
+<p>They can be a bit scary to retrofit to existing applications, but we can
+activate two postgres extensions to help us measure our queries to find safe
+values to set:</p>
+<ul>
+<li><code>pg_stat_statements</code></li>
+<li><code>auto_explain</code></li>
+</ul>
+<p>It's also a really good idea to monitor how many connections that are actively
+used on the database server. You may have integration with a good monitoring
+tool on the application side already, but if you don't, you can easily set
+up very useful monitoring by sampling the <code>pg_stat_activity</code>.</p>
+<h2><code>statement_timeout</code></h2>
+<p>The <a href="https://www.postgresql.org/docs/current/runtime-config-client.html">official documentation</a>
+has this to say:</p>
+<blockquote>
+<p>Abort any statement that takes more than the specified amount of time. If
+log_min_error_statement is set to ERROR or lower, the statement that timed out
+will also be logged. If this value is specified without units, it is taken as
+milliseconds. A value of zero (the default) disables the timeout.</p>
+</blockquote>
+<p>Usually you want to set it in the application configuration, for example in the
+connection pool configuration. If you use
+<a href="https://github.com/brettwooldridge/HikariCP#infrequently-used">HikariCP</a> it
+makes sense to configure your pool with:</p>
+<div class="highlight"><pre><span></span><code><span class="n">pool</span><span class="p">.</span><span class="na">setConnectionInitSql</span><span class="p">(</span><span class="s">&quot;set statement_timeout = 1000&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<p>Any transaction can <code>set statement_timeout</code> at any time, so if some queries must
+be allowed to run longer, it's easy to apply this setting locally (but remember
+to set it back to the default once you're done with the connection). It's not a
+good idea to set a database level default or server default, since it may
+interfere with migrations or analytical queries.</p>
+<p>The effect of this is that any statement that causes a connection to postgres to
+be in an active state longer than <code>statement_timeout</code> is canceled. This is
+important to set because if you don't have it, the database will keep chugging
+along even if the application gives up on the query, consuming hardware
+resources that might be required to complete other queries, causing everything
+to slow down. This kind of problem can be very difficult to debug, because
+code paths that aren't really problematic might start failing. It is much easier
+to figure out what's wrong if the problematic code path fails quickly.</p>
+<p>Suppose the following happens:</p>
+<ol>
+<li>Some result that needs to be sorted grows too large to be sorted in memory,
+   causing the database to sort using temporary files, slowing a query down
+   from a few milliseconds to many seconds.</li>
+<li>A user requests a page that runs this query, and the page appears to hang.
+   The user waits a couple of seconds, then tries to refresh the page. This may
+   happen more than once.</li>
+<li>At this point the database has N copies of the problematic query running,
+   each using lots of IO capacity. All N copies of the query and all other
+   queries that hit disk now contend to get IO time, slowing everything down to
+   a crawl. The database does not know that the application isn't interested in
+   the result of the first N - 1 copies of the query that the user canceled.</li>
+</ol>
+<p>This is what <code>statement_timeout</code> protects you against. Even if you set it to a
+high value like 2 seconds or 5 seconds, it's still valuable, to prevent 1 user
+from being able to use up all database server resources by accident, which they
+can easily do if they encounter a page that runs a pathologically bad query.</p>
+<p><code>statement_timeout</code> will also cancel transactions that wait a long time to
+obtain locks, helping you prevent your connection pool from running out of
+connections if you have some accidental locking or queueing for locks.</p>
+<h2>Setting <code>idle_in_transaction_session_timeout</code></h2>
+<p>This setting terminates connections that have started a transaction that
+did not either roll back or commit before the timeout occurs. A typical
+case of this might be that the application does some HTTP requests while
+holding an open transaction. If the application has taken locks in the database
+and forgot to set appropriate HTTP timeouts, this could cause pretty big
+problems for other traffic, so it's normally something you'd want to avoid just
+to be on the safe side. This setting can also be configured using <code>set</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">pool</span><span class="p">.</span><span class="na">setConnectionInitSql</span><span class="p">(</span><span class="s">&quot;set statement_timeout = 1000; set idle_in_transaction_session_timeout = 1000&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<h1>Adding timeouts to an existing application</h1>
+<p>By default both <code>statement_timeout</code> and <code>idle_in_transaction_session_timeout</code>
+are set to <code>0</code>, which disables them. If you didn't read up on this before
+setting up the application, it might seem very scary to set these up after the
+fact. Don't worry though, there are helpful tools in postgres that you can use
+to identify good timeout values for your application, although you may need
+some help from a DBA to enable them.</p>
+<p>There are two very useful postgres extensions that should be fairly
+uncontroversial to enable:</p>
+<h2><a href="https://www.postgresql.org/docs/current/pgstatstatements.html"><code>pg_stat_statements</code></a></h2>
+<p>This extension can track a number of metrics about the queries that your
+application actually runs in your database, these are the most useful ones to
+know about:</p>
+<ul>
+<li>How many times the query is run</li>
+<li>How much time does it take on average, the highest recorded runtime, the
+  standard deviation</li>
+<li>How often does it cause a cache miss or spill something to temp files on disk</li>
+</ul>
+<p>If you enable <code>pg_stat_statements.track_planning</code>, it will also tell you how
+much time it takes to plan the query. You enable this extension in
+<code>postgresql.conf</code>, for example:</p>
+<div class="highlight"><pre><span></span><code><span class="n">shared_preload_libraries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pg_stat_statements&#39;</span>
+<span class="n">pg_stat_statements</span><span class="o">.</span><span class="n">track_planning</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">on</span>
+</code></pre></div>
+
+<p>After it has been activated on the server, it needs to be <code>create</code>d in the
+databases that you plan to monitor:</p>
+<div class="highlight"><pre><span></span><code><span class="k">create</span><span class="w"> </span><span class="n">extension</span><span class="w"> </span><span class="n">pg_stat_statements</span>
+</code></pre></div>
+
+<p>There are many ways you can try to use this view to find out if you have queries
+that would be impacted by <code>statement_timeout</code>. You can reset the stats by
+running:</p>
+<div class="highlight"><pre><span></span><code><span class="k">select</span><span class="w"> </span><span class="n">pg_stat_statements_reset</span><span class="p">();</span>
+</code></pre></div>
+
+<p>Note that some queries will take a lot longer to execute immedately after a
+database restart, because many of the index and table files might not be in
+server RAM yet.</p>
+<h2><a href="https://www.postgresql.org/docs/current/auto-explain.html"><code>auto_explain</code></a></h2>
+<p>This extension serves 2 very useful purposes:</p>
+<ul>
+<li>It will help you identify slow queries</li>
+<li>It will go some way towards telling you why the query is slow by logging the
+  query plan</li>
+</ul>
+<p>There are a number of options you can configure here:</p>
+<ul>
+<li><code>auto_explain.log_min_duration</code> the threshold, in milliseconds, that causes a
+  query to be <code>explained</code> in the log</li>
+<li><code>auto_explain.log_analyze</code> enables the <code>analyze</code> option of <code>explain</code> for the
+  output that ends up in the log. In short this will give you the actual row
+  counts of the different query plan nodes, and optionally also buffers and
+  timing. This can be costly on some hardware.</li>
+<li><code>auto_explain.log_timing</code> enables actual time taken for query plan nodes,
+  which is often very useful, but can also be very expensive. It does nothing
+  without<code>auto_explain.log_analyze</code>. You can disable this to make
+  <code>auto_explain.log_analyze</code> cheaper.</li>
+<li><code>auto_explain.log_buffers</code> will log enable the <code>buffers</code> option for explain,
+  helping you identify whether the queries hit disk or read from the buffer
+  cache. This does nothing without <code>auto_explain.log_analyze</code>.</li>
+</ul>
+<p>Configuring both <code>pg_stat_statements</code> and <code>auto_explain</code> might look like this:</p>
+<div class="highlight"><pre><span></span><code><span class="n">shared_preload_libraries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pg_stat_statements,auto_explain&#39;</span>
+<span class="n">pg_stat_statements</span><span class="o">.</span><span class="n">track_planning</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">on</span>
+<span class="n">auto_explain</span><span class="o">.</span><span class="n">log_min_duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;100ms&#39;</span>
+<span class="n">auto_explain</span><span class="o">.</span><span class="n">log_analyze</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">on</span>
+<span class="n">auto_explain</span><span class="o">.</span><span class="n">log_buffers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">on</span>
+<span class="n">auto_explain</span><span class="o">.</span><span class="n">log_timing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">off</span>
+</code></pre></div>
+
+<h2>Sampling <code>pg_stat_activity</code> for monitoring</h2>
+<p>The <a href="https://www.postgresql.org/docs/current/monitoring-stats.html#MONITORING-PG-STAT-ACTIVITY-VIEWhttps://www.postgresql.org/docs/current/monitoring-stats.html#MONITORING-PG-STAT-ACTIVITY-VIEW"><code>pg_stat_activity</code></a>
+view is an excellent target for monitoring your connection pools, but since it
+represents a snapshot in time, naively sampling it will hide peak connection
+usage. To some extent it's possible to improve this by taking samples more often
+but it's probably a better idea to make use of the <code>state_change</code> column to find
+out how many columns that have been idle for the last sampling duration.</p>
+<p>Suppose you sample every 10 seconds, then the following query will give you
+the count of connections that have been completely idle since the last sampling,
+which will help you estimate your free capacity:</p>
+<div class="highlight"><pre><span></span><code><span class="k">select</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="k">from</span><span class="w"> </span><span class="n">pg_stat_activity</span>
+<span class="k">where</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;idle&#39;</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">state_change</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nb">interval</span><span class="w"> </span><span class="s1">&#39;10 seconds&#39;</span>
+</code></pre></div>
+
+<p>You can easily add <code>group by datname, usename</code> if you have multiple
+users/databases on the same database server.</p>
+<p>Note that there are a lot of different kinds of problems that may cause increase
+usage of connections to the database, but the most common one will be queries
+that are run with inefficient query plans, where <code>auto_explain</code> is a really good
+tool to help you figure out how to fix it.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+
+
+
+
+
+</article>
+
+<footer>
+<p>&copy;  </p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Robin's blog ",
+  "url" : "",
+  "image": "/images/face.png",
+  "description": ""
+}
+</script>
+</body>
+</html>
