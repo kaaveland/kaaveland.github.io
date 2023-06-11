@@ -9,17 +9,17 @@ environment that is required in order to build it. To get started, install
 pdm in any way you prefer, then:
 
 ``` shell
-pdm venv create -w venv && pdm venv activate in-project
+pdm venv create 3.11 -w venv && pdm sync && eval $(pdm venv activate in-project)
 ```
 
 To serve locally while you work:
 
 ``` shell
-pdm venv activate in-project && make devserver
+eval $(pdm venv activate in-project) && make devserver
 ```
 
 To publish to github pages:
 
 ``` shell
-pdm venv activate in-project && make github
+eval $(pdm venv activate in-project) && make github
 ```
