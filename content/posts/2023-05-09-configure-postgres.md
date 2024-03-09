@@ -196,10 +196,11 @@ Sampling `pg_stat_activity` for monitoring
 
 The [`pg_stat_activity`](https://www.postgresql.org/docs/current/monitoring-stats.html#MONITORING-PG-STAT-ACTIVITY-VIEWhttps://www.postgresql.org/docs/current/monitoring-stats.html#MONITORING-PG-STAT-ACTIVITY-VIEW)
 view is an excellent target for monitoring your connection pools, but since it
-represents a snapshot in time, naively sampling it will hide peak connection
-usage. To some extent it's possible to improve this by taking samples more often
-but it's probably a better idea to make use of the `state_change` column to find
-out how many columns that have been idle for the last sampling duration.
+represents a snapshot in time, naively sampling it will make it easy to miss
+peak connection usage, which is what's actually interesting. To some extent
+it's possible to improve this by taking samples more often but it's probably
+a better idea to make use of the `state_change` column to find
+out how many connections that have been idle for the last sampling duration.
 
 Suppose you sample every 10 seconds, then the following query will give you
 the count of connections that have been completely idle since the last sampling,

@@ -10,8 +10,8 @@ related to my work that I'd like to write about:
 - Things I learn. In my line of work, I learn something new almost every day and
   I'd like to get better at writing down some of those things.
 - Debugging and tools for debugging complex systems. I love a good debugging
-  story and I actually like the feeling of intense concentration when trying to
-  discover how complex systems work.
+  story and while I try to avoid outages as much as possible, I do enjoy the
+  intense concentration and focus that a production incident requires.
 - Some technology. These days, I'm enjoying Rust a lot but I have a lot more
   experience with languages like Java and Python, and I really like PostgreSQL.
   I've also done some machine learning at work, and I really like wrangling
@@ -29,4 +29,7 @@ when they overlap with technology in some way:
 - Fishing. The chances of finding my near a lake between May and October are
   reasonably good.
 - Photography. I wanted to take the nicest landscape photos, but after my son
-  was born I'm mostly just documenting life for my family.
+  was born I'm mostly taking only family photos.
+
+I used to blog a little bit during my stint in Posten/Bring, so you can read
+some of my previous blog posts [here](https://developer.bring.com/blog).
