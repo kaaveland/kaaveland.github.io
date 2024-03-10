@@ -5,7 +5,7 @@ SITENAME = "Robin's blog"
 SITETITLE = AUTHOR
 SITESUBTITLE = "Software engineer"
 SITEDESCRIPTION = ""
-SITEURL = 'https://kaveland.no'
+SITEURL = ''
 SITELOGO = '/images/face.png'
 STATIC_PATHS = ['images', 'CNAME']
 

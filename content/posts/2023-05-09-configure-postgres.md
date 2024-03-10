@@ -3,7 +3,6 @@ category: postgres
 date: 2023-05-09
 modified: 2023-05-09
 
-
 There are 2 configuration options that every OLTP application that uses postgres
 should set, in order to protect the database from high load:
 
