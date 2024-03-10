@@ -7,6 +7,7 @@ SITESUBTITLE = "Software engineer"
 SITEDESCRIPTION = ""
 SITEURL = ''
 SITELOGO = '/images/face.png'
+STATIC_PATHS = ['images', 'CNAME']
 
 ROBOTS = "index, follow"
 PATH = 'content'
