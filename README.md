@@ -8,9 +8,18 @@ It uses [pdm](https://github.com/pdm-project/pdm) to configure the python
 environment that is required in order to build it. To get started, install
 pdm in any way you prefer, then:
 
+
 ``` shell
 pdm venv create 3.11 -w venv && pdm sync && eval $(pdm venv activate in-project)
 ```
+
+The blog uses the [Flex](https://github.com/alexandrevicenzi/Flex), clone it
+into this directory:
+
+``` shellsession
+git@github.com:alexandrevicenzi/Flex.git
+```
+
 
 To serve locally while you work:
 

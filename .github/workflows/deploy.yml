@@ -1,0 +1,37 @@
+name: deploy to pages
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Checkout Flex theme
+        uses: actions/checkout@v4
+        with:
+          repository: alexandrevicenzi/Flex
+          path: Flex
+          ref: v2.5.0
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: 3.11
+          cache: true
+      - name: Install dependencies
+        run: pdm install
+      - name: Build pages
+        run: pdm run make publish
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output

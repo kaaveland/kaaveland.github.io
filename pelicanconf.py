@@ -39,6 +39,6 @@ DEFAULT_PAGINATION = 20
 #RELATIVE_URLS = True
 
 THEME = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
+    os.path.dirname(__file__),
     'Flex'
 )
