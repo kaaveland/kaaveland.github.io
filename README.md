@@ -17,7 +17,7 @@ The blog uses the [Flex](https://github.com/alexandrevicenzi/Flex), clone it
 into this directory:
 
 ``` shellsession
-git@github.com:alexandrevicenzi/Flex.git
+git clone git@github.com:alexandrevicenzi/Flex.git
 ```
 
 
@@ -27,8 +27,4 @@ To serve locally while you work:
 eval $(pdm venv activate in-project) && make devserver
 ```
 
-To publish to github pages:
-
-``` shell
-eval $(pdm venv activate in-project) && make github
-```
+To publish to github pages, push to `main`.
