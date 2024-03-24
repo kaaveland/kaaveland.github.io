@@ -26,7 +26,7 @@ related to my work that I'd like to write about:
 I have some hobbies that I might write about at some point too, particularly
 when they overlap with technology in some way:
 
-- Fishing. The chances of finding my near a lake between May and October are
+- Fishing. The chances of finding me near a lake between May and October are
   reasonably good.
 - Photography. I wanted to take the nicest landscape photos, but after my son
   was born I'm mostly taking only family photos.
