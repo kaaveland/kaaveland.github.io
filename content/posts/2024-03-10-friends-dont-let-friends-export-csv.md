@@ -12,6 +12,13 @@ it seems to be ubiquitous, present everywhere, it's human-readable, it's less
 verbose than options like JSON and XML, it's super easy to produce from almost
 any tool. What's not to like?
 
+**Edited section**: In hindsight, the title of this post is perhaps too
+controversial, and makes it too easy to miss the point. If you're exporting CSV
+to end users, to be consumed in spreadsheets, I too would probably just go for
+CSV. Please consider something else if you can reasonably expect your users to
+want to work with the data with tools like spark, pandas, R, polars or if it
+matters to you that people can make robust integrations against your data export.
+
 CSV is (usually) underspecified
 --
 
@@ -112,7 +119,7 @@ I've claimed that parquet is a vastly superior file format to CSV, both when it
 comes to compression, convenience and performance so let's do some experiments
 to back that up. I'm going to be presenting some file size and timing
 information and I'll be using [pandas](https://pandas.pydata.org/) and
-[polars](https://pola.rs/) for my examples, the code is written is run using
+[polars](https://pola.rs/) for my examples, the code is written run using
 IPython.
 
 To get some numbers, I've downloaded
