@@ -1,7 +1,7 @@
 title: Friends don't let friends export to CSV
 category: data
 date: 2024-03-24
-modified: 2024-03-24
+modified: 2024-04-04
 
 I worked for a few years in the intersection between data science and software
 engineering. On the whole, it was a really enjoyable time and I'd like to have
@@ -18,6 +18,8 @@ to end users, to be consumed in spreadsheets, I too would probably just go for
 CSV. Please consider something else if you can reasonably expect your users to
 want to work with the data with tools like spark, pandas, R, polars or if it
 matters to you that people can make robust integrations against your data export.
+This post was discussed in this [hacker news](https://news.ycombinator.com/item?id=39814334)
+thread.
 
 CSV is (usually) underspecified
 --
