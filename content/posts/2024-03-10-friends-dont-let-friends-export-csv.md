@@ -136,14 +136,23 @@ transform it into parquet:
 
 ``` python
 dtype = {
-    'Team 1': 'category', 'FT': 'category', 'HT': 'category',
-    'Team 2': 'category', 'Round': 'int8', 'Year': 'int16',
-    'Country': 'category', 'FT Team 1': 'int8', 'FT Team 2': 'int8',
-    'HT Team 1': 'int8', 'HT Team 2': 'int8', 'GGD': 'int8',
-    'Team 1 (pts)': 'int8', 'Team 2 (pts)': 'int8'
+    'Team 1': 'category',
+    'FT': 'category',
+    'HT': 'category',
+    'Team 2': 'category',
+    'Round': 'int8', 'Year': 'int16',
+    'Country': 'category',
+    'FT Team 1': 'int8',
+    'FT Team 2': 'int8',
+    'HT Team 1': 'int8',
+    'HT Team 2': 'int8',
+    'GGD': 'int8',
+    'Team 1 (pts)': 'int8',
+    'Team 2 (pts)': 'int8',
 }
+date_fmt = '(%a) %d %b %Y (W%W)'
 df = pd.read_csv('BIG FIVE 1995-2019.csv', dtype=dtype).assign(
-    Date=lambda df: pd.to_datetime(df.Date, format='(%a) %d %b %Y (W%W)')
+    Date=lambda df: pd.to_datetime(df.Date, format=date_fmt)
 )
 df.to_parquet('football.pq')
 ```
@@ -173,13 +182,13 @@ Let's check the relative time difference it takes to load both into memory:
 
 %%timeit
 df = pd.read_csv("BIG FIVE 1995-2019.csv.gz", dtype=dtype).assign(
-    Date=lambda df: pd.to_datetime(df.Date, format="(%a) %d %b %Y (W%W)")
+    Date=lambda df: pd.to_datetime(df.Date, format=date_fmt)
 )
 # 47.1 ms ± 380 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 
 %%timeit
 df = pd.read_csv("BIG FIVE 1995-2019.csv", dtype=dtype).assign(
-    Date=lambda df: pd.to_datetime(df.Date, format="(%a) %d %b %Y (W%W)")
+    Date=lambda df: pd.to_datetime(df.Date, format=date_fmt)
 )
 # 41.8 ms ± 880 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 ```
@@ -211,12 +220,14 @@ where = home_wins | away_wins
 count = pl.col("Team 1").count().alias("wins")
 
 
-%timeit pl.scan_csv("BIG FIVE 1995-2019.csv").filter(where).select(count).collect()
+%timeit pl.scan_csv("BIG FIVE 1995-2019.csv"
+  ).filter(where).select(count).collect()
 # 1.71 ms ± 37.2 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 %timeit pl.read_csv("BIG FIVE 1995-2019.csv.gz"
   ).lazy().filter(where).select(count).collect()
 # 9.44 ms ± 29.7 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
-%timeit pl.scan_parquet("football.pq").filter(where).select(count).collect()
+%timeit pl.scan_parquet("football.pq"
+  ).filter(where).select(count).collect()
 # 647 µs ± 6.37 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 ```
 
