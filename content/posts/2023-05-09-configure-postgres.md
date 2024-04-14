@@ -24,7 +24,7 @@ values to set:
 It's also a really good idea to monitor how many connections that are actively
 used on the database server. You may have integration with a good monitoring
 tool on the application side already, but if you don't, you can easily set
-up very useful monitoring by sampling the `pg_stat_activity`.
+up very useful monitoring by sampling the `pg_stat_activity` view.
 
 `statement_timeout`
 --

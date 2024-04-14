@@ -1,7 +1,7 @@
 title: Careful with That Lock, Eugene
 category: postgres
 date: 2024-04-12
-modified: 2024-04-12
+modified: 2024-04-14
 
 It is rewarding to work on software that people care about and use all around
 the clock. This constant usage means we can't simply take the system offline for
@@ -18,6 +18,8 @@ innocent migration, like adding a column to a table and it'll cause some number
 of requests to fail, or maybe even a small outage. There are some tricks we can
 use here to reduce risk and automatically detect some patterns that cause this
 problem.
+
+This post was discussed on hacker news [here.](https://news.ycombinator.com/item?id=40025148)
 
 ## Scenario 1
 
@@ -102,7 +104,8 @@ a partial outage that can impact users on the live system.
 
 This scenario is essentially identical to one in which there's a single
 migration statement that requires an `AccessExclusiveLock` _and_ performs a
-table rewrite, such as adding a `NOT NULL` column with a `DEFAULT` value.
+table rewrite, such as adding a `NOT NULL` column with a `DEFAULT`
+<a href="#fixed-in-pg-11">value*</a>.
 
 But at least if `A` is fast, nothing bad can happen, right? Well...
 
@@ -297,3 +300,11 @@ that rewrite large tables. We can also snapshot other tables from
 `information_schema`, or tables like `pg_attribute` to build a pretty good data
 structure describing the effect of the migration in terms of both schema and
 content.
+
+## Errata
+
+<div id="fixed-in-pg-11"></div>It is no longer true since
+[postgres 11](https://postgrespro.com/docs/postgresql/11/release-11) that adding a
+not null column with a default value causes a table rewrite, unless the
+default value is `VOLATILE`, like generating a random uuid or fetching a
+timestamp.
