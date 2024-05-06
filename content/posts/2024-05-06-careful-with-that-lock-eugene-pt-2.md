@@ -211,10 +211,26 @@ the time, it was fine. In many cases, some amount of downtime was acceptable and
 the application prior to running DDL. In many other cases, `lock_timeout` alone would have
 saved us from issues with slow concurrent transactions and lock queues.
 
+There is a lot of value in simplicity and simple migration scripts if you can afford it. Here
+are some things you may need to deal with if you use the safer approach recommended by
+eugene:
+
+- If your statements are unable to take their locks in 2 seconds, your script crashes. You
+  may need retries around your migration deployment.
+- Creating indexes concurrently can take a long time. The statement returns right away
+  and you need to wait for it to finish before you can run the next migration. You must be
+  prepared to handle a deadlock or unique violation that makes it unable to complete
+  the index.
+- Invariably, working like this is going to make you create a lot more migration scripts
+  than you otherwise would have.
+
 But if you'd like to learn more about how postgres locking works, and how to avoid common pitfalls
 when doing migrations, `eugene` can be a valuable tool. If you're working on a system where
 some tables are very large, or have a lot of concurrent transactions where some are slow, `eugene`
 could help you avoid "stopping the world" in production when you're executing migrations.
+
+On the whole, I've certainly learned a lot about how postgres works while making `eugene`,
+and I hope that I can impart some of that learning on others by seeing the tool adopted.
 
 # How does `eugene trace` work?
 
