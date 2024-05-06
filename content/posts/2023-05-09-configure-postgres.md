@@ -1,5 +1,6 @@
 title: Protecting your postgres server from your application
 category: postgres
+tags: postgres
 date: 2023-05-09
 modified: 2023-05-09
 

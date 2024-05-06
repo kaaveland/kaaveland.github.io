@@ -1,4 +1,5 @@
 title: Friends don't let friends export to CSV
+tags: data
 category: data
 date: 2024-03-24
 modified: 2024-04-04

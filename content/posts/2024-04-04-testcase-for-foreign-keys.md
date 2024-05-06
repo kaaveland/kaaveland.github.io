@@ -1,5 +1,6 @@
 title: How to test for missing indexes on foreign keys
 category: postgres
+tags: postgres
 date: 2024-04-04
 modified: 2024-04-04
 

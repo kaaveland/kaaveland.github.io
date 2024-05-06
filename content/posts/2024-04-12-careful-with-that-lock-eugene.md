@@ -1,4 +1,5 @@
 title: Careful with That Lock, Eugene
+tags: postgres
 category: postgres
 date: 2024-04-12
 modified: 2024-04-14
