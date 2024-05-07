@@ -271,17 +271,17 @@ Here's an example of a hint rule for the `running_statement_while_holding_access
 fn running_statement_while_holding_access_exclusive(
     sql_statement_trace: &FullSqlStatementLockTrace,
 ) -> Option<String> {
-    sql_statement_trace
+    let lock = sql_statement_trace
         .locks_at_start
         .iter()
-        .find(|lock| lock.mode == "AccessExclusiveLock")
-        .map(|lock| {
-            format!(
-                "The statement is running while holding an `AccessExclusiveLock` on the {} `{}.{}`, \
+        .find(|lock| lock.mode == "AccessExclusiveLock")?;
+
+    let help = format!(
+        "The statement is running while holding an `AccessExclusiveLock` on the {} `{}.{}`, \
                 blocking all other transactions from accessing it.",
-                lock.relkind, lock.schema, lock.object_name,
-            )
-        })
+        lock.relkind, lock.schema, lock.object_name,
+    );
+    Some(help)
 }
 ```
 
@@ -292,25 +292,24 @@ Here's another one for discovering columns that changed from `NULL` to `NOT NULL
 fn make_column_not_nullable_help(
     sql_statement_trace: &FullSqlStatementLockTrace,
 ) -> Option<String> {
-    let columns = sql_statement_trace
+    let column = sql_statement_trace
         .altered_columns
         .iter()
-        .find(|column| !column.new.nullable && column.old.nullable);
+        .find(|column| !column.new.nullable && column.old.nullable)?;
 
-    columns.map(|column| {
-        let table_name = format!("{}.{}", column.new.schema_name, column.new.table_name);
-        let col_name = column.new.column_name.as_str();
-        format!(
+    let table_name = format!("{}.{}", column.new.schema_name, column.new.table_name);
+    let col_name = column.new.column_name.as_str();
+    let help = format!(
             "The column `{col_name}` in the table `{table_name}` was changed to `NOT NULL`. \
             If there is a `CHECK ({col_name} IS NOT NULL)` constraint on `{table_name}`, this is safe. \
             Splitting this kind of change into 3 steps can make it safe:\n\n\
             1. Add a `CHECK ({col_name} IS NOT NULL) NOT VALID;` constraint on `{table_name}`.\n\
             2. Validate the constraint in a later transaction, with `ALTER TABLE {table_name} VALIDATE CONSTRAINT ...`.\n\
             3. Make the column `NOT NULL`\n",
-        )
-    }
-    )
+        );
+    Some(help)
 }
+
 ```
 
 I am hoping for some help to add many more to [hints.rs](https://github.com/kaaveland/eugene/blob/main/src/hints.rs)
