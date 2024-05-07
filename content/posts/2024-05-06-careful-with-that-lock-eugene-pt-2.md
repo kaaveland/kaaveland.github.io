@@ -18,7 +18,9 @@ use it to build valuable safety checks for DDL migrations. Kind of like
 At this point, I've made enough progress to share some results.
 I've been working on a Rust project that compiles a command line tool named
 `eugene` and published it to [crates.io](https://crates.io/crates/eugene)
-and `ghcr.io/kaaveland/eugene`.
+and `ghcr.io/kaaveland/eugene`. The code lives in
+[kaaveland/eugene](https://github.com/kaaveland/eugene) and there's a hacker
+news thread [here](https://news.ycombinator.com/item?id=40291241).
 
 This post is about what `eugene` can do, how it is implemented, and what I hope
 to achieve with it in the future.
