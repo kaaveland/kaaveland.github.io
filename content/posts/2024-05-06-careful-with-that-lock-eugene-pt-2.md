@@ -1,5 +1,5 @@
 title: Careful with That Lock, Eugene: Part 2
-tags: postgres, rust
+tags: postgres, rust, eugene
 category: postgres
 date: 2024-05-06
 modified: 2024-05-06
