@@ -1,6 +1,8 @@
-title: Projects
-slug: projects
-date: 2024-05-06
++++
+title = "Projects"
+slug = "projects"
+date = "2024-05-06"
++++
 
 I have a few projects on my GitHub that I sometimes work on:
 

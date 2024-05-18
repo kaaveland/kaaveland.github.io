@@ -1,8 +1,8 @@
-title: How to test for missing indexes on foreign keys
-category: postgres
-tags: postgres
-date: 2024-04-04
-modified: 2024-04-04
++++
+title = "How to test for missing indexes on foreign keys"
+tags = ["postgres"]
+date = "2024-04-04"
++++
 
 If you're developing a transactional application backed by postgres, there's a
 pretty cool trick you can use to check if you're missing indexes that could

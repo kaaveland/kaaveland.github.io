@@ -1,8 +1,10 @@
-title: How to buy the right fishing license
-category: data science, fishing, python
-date: 2023-06-11
-modified: 2023-06-11
-status: Draft
++++
+title = "How to buy the right fishing license"
+tags = ["data science", "fishing", "python"]
+date = "2023-06-11"
+modified = "2023-06-11"
+draft = true
++++
 
 For some years now, I've been building machine learning models to help me
 select fishing licenses any time they cost more than a few hundred NOK. It's

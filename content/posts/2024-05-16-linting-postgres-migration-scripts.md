@@ -1,8 +1,8 @@
-title: Linting postgres migration scripts
-tags: postgres, rust, eugene
-category: postgres
-date: 2024-05-16
-modified: 2024-05-16
++++
+title = "Linting postgres migration scripts"
+tags = ["postgres", "rust", "eugene"]
+date = "2024-05-16"
++++
 
 I have been working quite a bit on picking up dangerous migration patterns in
 migration scripts over at the [eugene repository](https://github.com/kaaveland/eugene)

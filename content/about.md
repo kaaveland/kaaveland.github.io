@@ -1,7 +1,8 @@
-title: About
-slug: about
-date: 2023-05-09
-
++++
+title = "About"
+slug = "about"
+date = "2023-05-09"
++++
 I am Robin and this blog is a place where I can write about things I find
 interesting. I'm a software engineer, living near Trondheim, Norway. I work
 as a consultant for [Arktekk](https://arktekk.no/). There are lots of topics

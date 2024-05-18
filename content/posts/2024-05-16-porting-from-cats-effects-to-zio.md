@@ -1,8 +1,9 @@
-title: Porting an application from cats effects to ZIO
-category: scala
-tags: scala, zio, cats-effect
-date: 2024-05-16
-date: 2024-05-16
++++
+title = "Porting an application from cats effects to ZIO"
+tags = ["scala", "zio", "cats-effect"]
+date = "2024-05-16"
+date-modified = "2024-05-16"
++++
 
 In my current project, we're working on a large-ish code base that is written in
 Scala and uses [cats effect](https://typelevel.org/cats-effect/) as an effect
