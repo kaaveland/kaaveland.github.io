@@ -2,6 +2,7 @@
 title = "Linting postgres migration scripts"
 tags = ["postgres", "rust", "eugene"]
 date = "2024-05-16"
+modified = "2024-05-18"
 +++
 
 I have been working quite a bit on picking up dangerous migration patterns in
@@ -146,18 +147,19 @@ still context free. We can't know if a `CREATE INDEX` statement is dangerous wit
 whether the table it's created on is visible to other transactions or not. For that reason,
 we also need to keep track of some sort of context, or result, of the transaction so far.
 
-I named this concept a `LintContext` and it looks like this:
+I named this concept a `TransactionState` and it looks like this:
 
 ```rust
 #[derive(Debug, Default, Eq, PartialEq)]
-pub struct LintContext {
+pub struct TransactionState {
     locktimeout: bool,
     created_objects: Vec<(String, String)>,
+    altered_tables: Vec<(String, String)>,
     has_access_exclusive: bool,
 }
 #[derive(Copy, Clone)]
-pub struct LintedStatement<'a> {
-    pub(crate) ctx: &'a LintContext,
+pub struct LintContext<'a> {
+    pub(crate) ctx: &'a TransactionState,
     pub(crate) statement: &'a StatementSummary,
 }
 ```
@@ -175,7 +177,7 @@ that `eugene trace` has, it's just going to be less precise.
 For example, here's the check for `create index` without `concurrently`:
 
 ```rust
-fn create_index_nonconcurrently(stmt: LintedStatement) -> Option<String> {
+fn create_index_nonconcurrently(stmt: LintContext) -> Option<String> {
     match stmt.statement {
         StatementSummary::CreateIndex {
             schema,
@@ -185,7 +187,7 @@ fn create_index_nonconcurrently(stmt: LintedStatement) -> Option<String> {
             ..
         } if stmt.is_visible(schema, target) => {
             let schema = if schema.is_empty() { "public" } else { schema };
-            Some(format!("Statement takes `ShareLock` on `{schema}.{target}`, blocking\
+            Some(format!("Statement takes `ShareLock` on `{schema}.{target}`, blocking \
              writes while creating index `{schema}.{idxname}`"))
         }
         _ => None,

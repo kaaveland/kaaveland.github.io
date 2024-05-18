@@ -18,4 +18,3 @@ Hugo can do, but I think I have everything I need set up for now.
 
 It's a bit sad that the old links no longer work, but the posts should be easy
 to find for anyone who ends up with a `404` anyway.
-
