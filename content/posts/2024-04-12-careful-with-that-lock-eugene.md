@@ -2,6 +2,7 @@
 title = "Careful with That Lock, Eugene"
 tags = ["postgres", "eugene"]
 date = "2024-04-12"
+aliases = ["/careful-with-that-lock-eugene.html"]
 +++
 
 It is rewarding to work on software that people care about and use all around

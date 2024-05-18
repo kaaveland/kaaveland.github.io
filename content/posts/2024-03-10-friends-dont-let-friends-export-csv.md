@@ -3,6 +3,7 @@ title = "Friends don't let friends export to CSV"
 tags = ["data", "software engineering"]
 date = "2024-03-24"
 modified = "2024-04-04"
+aliases = ["/friends-dont-let-friends-export-to-csv.html"]
 +++
 
 I worked for a few years in the intersection between data science and software
