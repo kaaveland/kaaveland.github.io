@@ -1,8 +1,9 @@
-title: Isolating integration tests that commit transactions
-tags: postgres
-category: postgres
-date: 2024-03-10
-modified: 2024-03-10
++++
+title = "Isolating integration tests that commit transactions"
+tags = ["postgres"]
+date = "2024-03-10"
+modified = "2024-03-10"
++++
 
 For tests that need to touch the database, it is generally a really good idea to
 roll back transactions. That way, you can run lots of tests in parallell or in

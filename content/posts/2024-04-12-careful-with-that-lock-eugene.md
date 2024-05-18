@@ -1,8 +1,8 @@
-title: Careful with That Lock, Eugene
-tags: postgres, eugene
-category: postgres
-date: 2024-04-12
-modified: 2024-04-14
++++
+title = "Careful with That Lock, Eugene"
+tags = ["postgres", "eugene"]
+date = "2024-04-12"
++++
 
 It is rewarding to work on software that people care about and use all around
 the clock. This constant usage means we can't simply take the system offline for

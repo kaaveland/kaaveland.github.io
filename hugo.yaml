@@ -1,0 +1,86 @@
+baseURL: https://kaveland.no/
+languageCode: en-us
+title: Robin's blog
+theme: PaperMod
+enableEmoji: true
+enableRobotsTXT: true
+
+params:
+  title: Robin's blog
+  author: Robin Kåveland
+  DateFormat: "January 2, 2006"
+  defaultTheme: auto
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowPostNavLinks: true
+  ShowShowBreadCrumbs: true
+
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowWordCount: true
+  ShowRssButtonInSectionTermList: true
+  UseHugoToc: true
+  disableSpecial1stPost: false
+  disableScrollToTop: false
+  comments: false
+  hidemeta: false
+  hideSummary: false
+  showtoc: true
+  tocopen: false
+
+  homeInfoParams:
+    title: "Welcome to my blog"
+    Content: |
+      Sometimes, I feel the need to write, and this is a place where I can share what I write
+      with others if I feel the need to. I hope you find something interesting here. To learn
+      more about me, you can visit the [about](/about/) page, or perhaps you want to take a 
+      look at my [projects](/projects/).
+  socialIcons:
+    - name: x
+      url: "https://x.com/robinkaveland"
+    - name: github
+      url: "https://github.com/kaaveland"
+    - name: linkedin
+      url: "https://www.linkedin.com/in/robin-kåveland-8157a5a6"
+
+  cover:
+    hidden: true # hide everywhere but not in structured data
+    hiddenInList: true # hide on list pages and home
+    hiddenInSingle: true # hide on single page
+
+  editPost:
+    URL: "https://github.com/kaaveland/kaaveland.github.io/content"
+    Text: "Suggest Changes" # edit text
+    appendFilePath: true # to append file path to Edit link
+
+menu:
+  main:
+    - identifier: about
+      name: about
+      url: /about/
+      weight: 10
+    - identifier: projects
+      name: projects
+      url: /projects/
+      weight: 20
+    - identifier: tags
+      name: tags
+      url: /tags/
+      weight: 30
+    - identifier: archives
+      name: archives
+      url: /archives/
+      weight: 40
+# Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
+pygmentsUseClasses: true
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: false
+    anchorLineNos: true
+    codeFences: true
+    # guessSyntax: true
+    # lineNos: true
+    # style: monokai
