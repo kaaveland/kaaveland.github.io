@@ -32,9 +32,9 @@ params:
     title: "Welcome to my blog"
     Content: |
       Sometimes, I feel the need to write, and this is a place where I can share what I write
-      with others if I feel the need to. I hope you find something interesting here. To learn
-      more about me, you can visit the [about](/about/) page, or perhaps you want to take a 
-      look at my [projects](/projects/).
+      with others. I hope you find something interesting here. To learn more about me, you can 
+      visit the [about](/about/) page, or perhaps you want to take a look at my 
+      [projects](/projects/).
   socialIcons:
     - name: x
       url: "https://x.com/robinkaveland"
@@ -76,6 +76,7 @@ pygmentsUseClasses: true
 markup:
   goldmark:
     renderer:
+      # This is in order to allow `<div>` in some markdown posts
       unsafe: true
   highlight:
     noClasses: false

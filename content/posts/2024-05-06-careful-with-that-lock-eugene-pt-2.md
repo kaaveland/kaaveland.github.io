@@ -5,7 +5,7 @@ date = "2024-05-06"
 +++
 
 A while back, I wrote
-[Careful with That Lock, Eugene](/careful-with-that-lock-eugene.html) about an
+[Careful with That Lock, Eugene](/posts/2024-04-12-careful-with-that-lock-eugene) about an
 idea for how to check if a database migration is likely to disturb production.
 That post came about after having an inspiring chat with a colleague about
 the advantages of transactional migration scripts and the ability to check
