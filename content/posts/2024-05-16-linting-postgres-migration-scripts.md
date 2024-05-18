@@ -96,12 +96,22 @@ Each of the variants of `NodeRef` contains a reference to a protobuf struct
 
 This is much nicer to work with than putting the actual data in enum variants, because it means
 you can type a function to accept "the variant", so it's clear what kind of data it expects,
-and you avoid having to match on the enum. This kind of makes the enum work more like a
-scala `sealed trait` with `case object` and `case class`, which is useful, if you find
-yourself wanting to pass an enum variant around.
+and you avoid having to match on the enum in more than one place. This kind of makes it feel like a
+scala `sealed trait` with `case class`es in terms of capabilities, which is nice. The disadvantage
+is that there's an extra layer of unpacking to do in matches, in order to get the data, you'd have
+to do something like this to bind the `aliasname` field of an `Alias`:
+
+```rust
+fn example(stmt: pg_query::NodeRef) {
+    match stmt {
+        NodeRef::Alias(pg_query::protobuf::Alias { aliasname, .. }) => {} // Do something with `aliasname`
+        _ => {}
+    }
+}
+```
 
 `NodeRef` and its sibling `Node` turn up in a lot of places in the protobuf structs, and are
-a bit difficult to work with, with all the borrowing and referencing.
+a bit difficult to work with, with all the borrowing, referencing and this extra layer.
 
 For this reason I decided to translate the part of the grammar I wanted to analyze into
 something that was easier to work with, which I named `StatementSummary`:
@@ -139,8 +149,9 @@ pub fn describe(statement: &pg_query::NodeRef) -> anyhow::Result<StatementSummar
 
 Note that because of the way the protobuf structs are typed, we're being forced to return
 `Result` instead of `StatementSummary` because something like `NodeRef::CreateStmt` contains
-`Vec<Node>` in its `.table_elt` attribute, instead of `Vec<ColumnDef>`, so we must either match and
-panic in the non-matching case, or return a `Result`.
+`Vec<Node>` in its `.table_elt` attribute, instead of a more narrow type, so there is no
+guarantee in the types that a table element isn't something like a `CreateMaterializedViewStmt`,
+even though we know that the parser would never do that to us.
 
 Once the translation is done, we have something that's pretty easy to lint against, but it is
 still context free. We can't know if a `CREATE INDEX` statement is dangerous without knowing
