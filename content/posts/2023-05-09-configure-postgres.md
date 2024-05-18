@@ -3,6 +3,7 @@ title = "Protecting your postgres server from your application"
 tags = ["postgres"]
 date = "2023-05-09"
 modified = "2023-05-09"
+aliases = ["/protecting-your-postgres-server-from-your-application.html"]
 +++
 
 There are 2 configuration options that every OLTP application that uses postgres

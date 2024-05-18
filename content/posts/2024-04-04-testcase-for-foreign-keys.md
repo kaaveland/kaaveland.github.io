@@ -2,6 +2,7 @@
 title = "How to test for missing indexes on foreign keys"
 tags = ["postgres"]
 date = "2024-04-04"
+aliases = ["/how-to-test-for-missing-indexes-on-foreign-keys.html"]
 +++
 
 If you're developing a transactional application backed by postgres, there's a

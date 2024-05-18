@@ -3,6 +3,7 @@ title = "Linting postgres migration scripts"
 tags = ["postgres", "rust", "eugene"]
 date = "2024-05-16"
 modified = "2024-05-18"
+aliases = ["/linting-postgres-migration-scripts.html"]
 +++
 
 I have been working quite a bit on picking up dangerous migration patterns in

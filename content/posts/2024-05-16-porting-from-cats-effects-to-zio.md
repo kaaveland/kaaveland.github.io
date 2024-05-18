@@ -3,6 +3,7 @@ title = "Porting an application from cats effects to ZIO"
 tags = ["scala", "zio", "cats-effect"]
 date = "2024-05-16"
 date-modified = "2024-05-16"
+aliases = ["/porting-an-application-from-cats-effects-to-zio.html"]
 +++
 
 In my current project, we're working on a large-ish code base that is written in

@@ -3,6 +3,7 @@ title = "Isolating integration tests that commit transactions"
 tags = ["postgres"]
 date = "2024-03-10"
 modified = "2024-03-10"
+aliases = ["/isolating-integration-tests-that-commit-transactions.html"]
 +++
 
 For tests that need to touch the database, it is generally a really good idea to
