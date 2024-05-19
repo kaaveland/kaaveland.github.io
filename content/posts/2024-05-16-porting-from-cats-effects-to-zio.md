@@ -48,7 +48,7 @@ might be interesting to share some of the things we've learned in the process.
 
 ## Devising a method to refactor
 
-There are a **a lot** of common signatures between `IO` and `ZIO`, and we had
+There are **a lot** of common signatures between `IO` and `ZIO`, and we had
 strong reasons to believe that in many places, just changing the type would be
 enough. The first thing we did was to define an `IO` alias for `ZIO`, so that
 we could update the effect type we used across the whole code base by only editing
