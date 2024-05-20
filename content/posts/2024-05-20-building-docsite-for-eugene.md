@@ -13,15 +13,20 @@ already feeling like I was up to speed on that, I decided I'd try using it
 for the eugene documentation too. I experimented with a few different
 setups around the [hugo-book](https://themes.gohugo.io/themes/hugo-book/)
 theme, but it ended up feeling like I was having to configure a bit
-too much for my taste, to make it work the way I wanted. I think
-it looked really nice, but the setup felt a bit janky and complicated,
-with having the submodules and everything in the eugene repo itself.
+too much for my taste. I think it looked really nice, but the setup
+felt a bit janky and complicated, with having the submodules and 
+everything in the eugene repo itself. I think my problem here is
+just that doing this with hugo would require me to learn more about
+hugo than I'm ready for right now.
 
 Fortunately, it was very easy to try my hands at [mdBook](https://github.com/rust-lang/mdBook),
 since I had most of the structure I needed in place after trying hugo. I 
 spent less than an hour getting things working again, and now I've spent
-a few more hours writing content and content generators and it's really
-starting to feel natural to work with.
+a few more hours writing content and content generators, and it's really
+starting to feel natural to work with. Fortunately for me, mdBook has
+taken almost all the decisions for me, and I can just focus on writing.
+There's definitely stuff you can do with hugo that mdBook just can't do,
+but I don't anticipate needing any of that for the eugene documentation.
 
 My favorite section so far is the 
 [Hint reference](https://kaveland.no/eugene/hints), where each rule
