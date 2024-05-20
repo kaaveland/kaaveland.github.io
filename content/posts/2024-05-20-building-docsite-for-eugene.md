@@ -65,8 +65,14 @@ change anything. By checking in the results, I also make sure that
 the documentation is diffed and reviewed in pull requests before
 updating the webpage.
 
-I've added handlebars templates for the tool itself, and now also
-use that for generating some of the content for the documentation.
+I've added [handlebars](https://docs.rs/handlebars/latest/handlebars/)
+templates for the tool itself, and now also use that for generating 
+some of the content for the documentation. I chose handlebars because
+it's what mdBook uses and I thought I might have to do custom templates
+for mdBook at some point. [Tera](https://keats.github.io/tera/docs/)
+honestly looks more like what I'm used to, but it turns out I care
+surprisingly little about choice of templating language. I prefer not
+to do anything complicated with templates anyway. :shrug:
 
 One thing that _is_ a bit hacky is the way I make sure that mdBook
 learns about these pages. For mdBook to render markdown to html,
@@ -104,7 +110,7 @@ in the exploratory phase of the project, I didn't want to get bogged down
 in researching the options and having to make choices about dependencies.
 I think doing it badly at first, then doing it right if it turns out to be
 valuable is often a good strategy. This would make an excellent subject
-for another blog post, so I'll try to revisit that in the future.
+for another blog post, so I'll try to revisit that idea in the future.
 
 I've asked for some advice from colleagues on how to structure the
 documentation and I all the suggestions I've got have been very useful.
@@ -116,7 +122,7 @@ I've relearned that I really like making information accessible! If
 I'm going to succeed in helping people write safer schema migrations,
 I think having good-looking documentation is essential. :raised_hands:
 
-## Future work
+## Future work on eugene
 
 I've added a bunch of new issues to the eugene repo. Some of those are
 going to be feeling like a slog to work through. I've decided to unify
