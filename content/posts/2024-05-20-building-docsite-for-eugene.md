@@ -4,7 +4,7 @@ tags = ["eugene", "writing", "rust", "documentation"]
 date = "2024-05-20"
 +++
 
-I've been busy working on a documentation site for [eugene](https://kaveland.no/eugene), and I
+I've been busy working on a [documentation site for eugene](https://kaveland.no/eugene), and I
 think it's starting to look pretty good. I wanted to write down some of
 my thoughts around the process so far, and some of the things I've learned.
 
