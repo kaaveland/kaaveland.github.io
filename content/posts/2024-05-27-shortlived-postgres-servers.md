@@ -1,6 +1,6 @@
 +++
 title = "Using short lived postgres servers for testing"
-tags = ["postgres", "testing", "cicd"]
+tags = ["postgres", "testing", "cicd", "eugene"]
 date = "2024-05-27"
 +++
 
@@ -102,3 +102,20 @@ still use this template idea, and maintain a single stable database
 in a single database server, then use `create database $uuid template stable_db`
 to set up a new database quickly. You can read more about that idea
 in a previous blog post [here](/posts/2024-03-10-testing-transactions-that-commit).
+
+## Using it for fun and profit for eugene
+
+For a while now, I've been working on the `eugene trace` command over
+at [the eugene repository](https://github.com/kaaveland/eugene), and I've
+been pondering how to make it easier for people to get started with it. In
+the weekend, I remembered this pattern that I've used many times before,
+and I thought maybe `eugene trace` can just bring its own postgres
+instance to the party. With the [0.5.0 release](https://github.com/kaaveland/eugene/releases/tag/0.5.0),
+it does just that. If you have docker installed, you can run `eugene trace` in
+a directory that has flyway-style migrations like this:
+
+```shell
+docker run --rm -v $(pwd):/migrations ghcr.io/kaaveland/eugene:0.5.0 trace /migrations
+```
+
+There's no setup required and the container is gone when the command finishes.
