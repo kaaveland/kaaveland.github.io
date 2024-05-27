@@ -54,7 +54,14 @@ different port, you'd say:
 pg_ctl -D /tmp/throwaway-postgres -o "-p 5433" start
 ```
 
-This makes it really easy to run many postgres instances on the same server.
+This makes it really easy to run many postgres instances on the same server,
+and you also don't really need something like docker to run postgres in your
+local dev environment. You can just set up a new data directory for each
+project, and start and stop the server as you need it, or just run it
+in the foreground in the shell. If you do this, you probably want to use
+something like [mise](https://mise.jdx.dev/getting-started.html) to make
+sure that all developers use the version of postgres that you plan on
+using in production.
 
 ## I need my instances to have data
 
@@ -81,6 +88,9 @@ replays any transactions that happened during the backup. This shouldn't
 take more than a couple of minutes for a small database of 15-30GB, and
 you get an exact copy of the stable instance, with users, databases,
 configuration, and all the data.
+
+Note that `pg_basebackup` won't work across different major versions of
+postgres, or different CPU architectures.
 
 ## Making dynamic instances in kubernetes
 
