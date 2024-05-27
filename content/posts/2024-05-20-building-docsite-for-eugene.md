@@ -46,7 +46,7 @@ contains all the static data for all the rules. Both the linter and the tracer
 refer to this data when defining the logic for when to trigger a rule.
 
 Once the static data is added here, there's a test that will start failing
-in `render_lint_examples.rs`. This test asserts that each rule in `hint_data::ALL`
+in `render_doc_snapshots.rs`. This test asserts that each rule in `hint_data::ALL`
 has a corresponding example at `examples/{id}/bad`. This example should
 be a directory with `.sql` files that cause the rule to trigger. Optionally,
 `examples/{id}/good` can show a workaround. I don't know of workarounds
