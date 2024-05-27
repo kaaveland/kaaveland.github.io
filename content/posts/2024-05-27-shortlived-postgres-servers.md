@@ -125,7 +125,8 @@ it does just that. If you have docker installed, you can run `eugene trace` in
 a directory that has flyway-style migrations like this:
 
 ```shell
-docker run --rm -v $(pwd):/migrations ghcr.io/kaaveland/eugene:0.5.0 trace /migrations
+docker run --rm -v $(pwd):/migrations \
+  ghcr.io/kaaveland/eugene:0.5.0 trace /migrations
 ```
 
 There's no setup required and the container is gone when the command finishes.
