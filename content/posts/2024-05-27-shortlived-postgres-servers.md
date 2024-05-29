@@ -29,7 +29,7 @@ so that there's a postgres instance already set up somewhere under
 `/var/lib/postgresql` and it makes it sort of look like you can only have the one.
 
 But it's really easy to set up a new postgres instance on a server that
-has a postgres installation. Here's what you need to do:
+has the postgres binaries. Here's what you need to do:
 
 ```shell
 # Create a new directory for the data
@@ -70,7 +70,8 @@ many empty postgres instances. The next hurdle then, would generally be to
 populate the instances with some data, so that our tests or applications can
 actually use them. My preferred pattern for this is to have a single instance
 that is stable and set up with the data that I need, then clone from that to
-make new instances. This is also really simple:
+make new instances. Suppose you have a stable permanent test environment, for 
+example. Then, this is also really simple:
 
 ```shell
 # Either set up PGPASSWORD or use a .pgpass file
@@ -89,8 +90,11 @@ take more than a couple of minutes for a small database of 15-30GB, and
 you get an exact copy of the stable instance, with users, databases,
 configuration, and all the data.
 
-Note that `pg_basebackup` won't work across different major versions of
-postgres, or different CPU architectures.
+Note that `pg_basebackup` isn't guaranteed to work across different major
+versions of postgres, or different CPU architectures, you'll still need
+`pg_dump` for some situations. But if you want to be able to quickly set
+up databases for testing, you should check if `pg_basebackup` will work
+for you, before reaching for `pg_dump`.
 
 ## Making dynamic instances in kubernetes
 
@@ -99,7 +103,7 @@ set up a new postgres instance in a pod very easily. You'll need to create
 a new pod with an `initContainer` that runs `pg_basebackup` to set up the
 data directory, then start the postgres instance in the main container. We
 do this at my current project to set up complete short-lived environments
-for manual testing or demo purposes, and it works really well. It takes
+for manual testing and demo purposes, and it works quite well. It takes
 a few minutes to deploy a complete environment with a ~15GB database
 instance. It's also a useful trick to test database migrations on a
 realistic dataset before deploying them to production.
