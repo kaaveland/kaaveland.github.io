@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -45,11 +45,19 @@ jobs:
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
           TZ: Europe/Oslo
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           hugo \
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
+          git branch -D static-pages || true
+          git checkout -b static-pages
+          git add -f public
+          git config user.name "bot user"
+          git config user.email "kaaveland@gmail.com"
+          git commit -m 'Build static pages'
+          git push --force origin static-pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
