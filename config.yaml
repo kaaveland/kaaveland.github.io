@@ -63,6 +63,10 @@ menu:
       name: projects
       url: /projects/
       weight: 20
+    - identifier: eugene
+      name: eugene
+      url: /eugene/
+      weight: 25
     - identifier: tags
       name: tags
       url: /tags/
