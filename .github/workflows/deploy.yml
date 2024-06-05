@@ -50,7 +50,7 @@ jobs:
           hugo \
             --gc \
             --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"
+            --baseURL "https://kaveland.no"
           git branch -D static-pages || true
           git checkout -b static-pages
           git add -f public
