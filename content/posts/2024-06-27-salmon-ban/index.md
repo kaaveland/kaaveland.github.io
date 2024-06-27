@@ -2,6 +2,7 @@
 title = "Norwegian Wild Salmon Fishing Ban of 2024"
 date = "2024-06-27"
 modified = "2024-06-27"
+tags = ["hugo", "fishing", "data", "seaborn", "pandas", "visualization"]
 +++
 For this blog post, I'm trying something different. This is a jupyter notebook that I'm using to study some data, and just dumping my brain out in text. If I can easily export this to a format that works with [hugo](https://gohugo.io/), this might become a common occurrence.
 
