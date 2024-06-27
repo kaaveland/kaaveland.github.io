@@ -2,6 +2,7 @@
 title = "Using short lived postgres servers for testing"
 tags = ["postgres", "testing", "cicd", "eugene"]
 date = "2024-05-27"
+modified = "2024-06-27"
 +++
 
 Database servers are usually long-lived, and important parts of the infrastructure
@@ -11,6 +12,12 @@ that setting up a database server is some mysteriously difficult ordeal. To be c
 that's actually true, if you need high availability and a solid recovery point objective.
 But there are a lot of use cases where that's overkill, for example short-lived
 test environments, or CI/CD pipelines.
+
+Edit: Hacker news thread [here](https://news.ycombinator.com/item?id=40813479), in
+which several people tip about [testcontainers](https://testcontainers.com/), which
+is great for running tests, both locally and in CI/CD. 
+[pgtemp](https://github.com/boustrophedon/pgtemp) can automate exactly the steps I
+describe in this post and seems like a great tool.
 
 ## The postgres data directory
 

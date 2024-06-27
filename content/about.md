@@ -9,7 +9,7 @@ interesting. I'm an experienced software engineer, living near Trondheim, Norway
 I work as a consultant for [Arktekk](https://arktekk.no/). There are lots of topics
 related to my work that I'd like to write about:
 
-- Things I learn. In my line of work, I learn something new almost every day and
+- Things I learn. In my line of work, I learn something new almost every day, and
   I'd like to get better at writing down some of those things.
 - Debugging and tools for debugging complex systems. I love a good debugging
   story and while I try to avoid outages as much as possible, I do enjoy the
@@ -48,7 +48,7 @@ Here are some technologies and problems that I have a lot of experience working 
 - Python (data analysis and machine learning, devops, backend development)
 - Spark (Databricks), pandas, torch
 - PostgreSQL, both ops and using it as a developer
-- Devops and CI/CD, Github Actions, Gitlab CI/CD, Jenkins
+- Devops and CI/CD, GitHub Actions, Gitlab CI/CD, Jenkins
 - Terraform, Kubernetes, Puppet, Ansible, Docker
 - Grafana, InfluxDB, ELK stack, OpenTelemetry
 - Azure
