@@ -109,8 +109,8 @@ in such cases it may be worth adding a synthetic key to the table, just to make 
 
 ## Putting it all together
 
-Here's a self-contained scala-cli script that shows how to do this from the JDBC-side. It won't look too different in
-Java or Kotlin, but scala-cli is so hassle-free for these kinds of things:
+Here's a self-contained [scala-cli](https://scala-cli.virtuslab.org/) script that shows how to do this from the
+JDBC-side. It won't look too different in Java or Kotlin.
 
 ```scala
 //> using scala "3.5.0"
