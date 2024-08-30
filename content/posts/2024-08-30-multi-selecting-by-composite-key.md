@@ -105,3 +105,28 @@ With columns that are part of a primary key, it should be safe, as long as the a
 
 Obviously this hack gets annoying if there are a lot of tables with composite keys that contain a lot of columns, and
 in such cases it may be worth adding a synthetic key to the table, just to make it more ergonomic to work with.
+
+## Putting it all together
+
+Here's a self-contained scala-cli script that shows how to do this from the JDBC-side. It won't look too different in
+Java or Kotlin, but scala-cli is so hassle-free for these kinds of things:
+
+```scala
+//> using scala "3.5.0"
+//> using dep "org.postgresql:postgresql:42.7.4"
+
+import java.sql.{Connection, DriverManager}
+
+object Main {
+  def main(args: Array[String]): Unit = {
+    val url = "jdbc:postgresql://localhost:5432/postgres"
+    val connection = DriverManager.getConnection(url, "postgres", "postgres")
+    val sql = "delete from orders where (order_id, customer_id) = ANY(" +
+      "select unnest(? :: int[]), unnest(? :: text[]))";
+    val statement = connection.prepareStatement(sql)
+    statement.setObject(1, Array(1, 2, 3))
+    statement.setObject(2, Array("one", "two", "three"))
+    println(statement.executeUpdate())
+  }
+}
+```
