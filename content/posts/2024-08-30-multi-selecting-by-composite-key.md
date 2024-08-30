@@ -100,7 +100,9 @@ postgres=# select unnest('{one, two, three, NULL}' :: text[]), unnest('{1, 2, 3,
 (4 rows)
 ```
 
-With columns that are part of a primary key, it should be safe, as long as the array value that we pass in isn't `NULL`.
+With columns that are part of a primary key, it should be safe, as long as the array value that we pass in isn't `NULL`,
+because postgres will automatically promote columns to `NOT NULL` if they become part of a primary key, and prevent
+us from altering them back to `NULL`.
 
 Obviously this hack gets annoying if there are a lot of tables with composite keys that contain a lot of columns, and
 in such cases it may be worth adding a synthetic key to the table, just to make it more ergonomic to work with.
