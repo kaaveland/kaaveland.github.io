@@ -90,7 +90,6 @@ postgres=# select unnest(NULL :: text[]), unnest('{1, 2, 3, 4}' :: int[]);
         |      4
 (4 rows)
 
-```sql
 postgres=# select unnest('{one, two, three, NULL}' :: text[]), unnest('{1, 2, 3, 4}' :: int[]);
  unnest | unnest 
 --------+--------
