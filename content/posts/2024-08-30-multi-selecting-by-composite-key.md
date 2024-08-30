@@ -1,5 +1,5 @@
 +++
-title = "Multi-selecting by composite key in postgres over jdbc"
+title = "Batch operations using composite keys in postgres over jdbc"
 date = 2024-08-30T00:00:00Z
 draft = false
 tags = ["jdbc", "java", "scala", "postgres"]
