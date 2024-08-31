@@ -130,9 +130,9 @@ import java.sql.DriverManager
 }
 ```
 
-If you don't want to spend the storage space in your brain for this kind of pattern, my friend Øyvind has implemented
-an excellent code generator for this kind of thing in his [typo](https://oyvindberg.github.io/typo/docs/) library. It
-takes care of some other annoyances with composite keys as well, like generating tedious joins, and mapping to/from
-the database for you. Currently it generates Scala code, but I know that there's secret plans to make it generate
-Kotlin and Java as well. I highly recommend taking a look, especially if you're working with a lot of tables with
-composite keys.
+If you don't want to spend the storage space in your brain for this kind of pattern, my friend Øyvind Raddum Berg has
+implemented an excellent code generator for this kind of thing in his [typo](https://oyvindberg.github.io/typo/docs/) 
+library. It takes care of some other annoyances with composite keys as well, like generating tedious joins, and 
+mapping to/from the database for you. Currently, it generates Scala code, but I know that there's secret plans 
+to make it generate Kotlin and Java as well soon. I highly recommend taking a look, especially 
+if you're working with a lot of tables with composite keys.
