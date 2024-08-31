@@ -5,12 +5,12 @@ draft = false
 tags = ["jdbc", "java", "scala", "postgres"]
 +++
 
-Throughout a career as a software developer, there are a lot of patterns that you see just barely often enough to
-remember that they exist, and have to look up every time you need them. I've found that one way that I can more 
-easily remember things is to write them down, and this particular pattern is one that is very useful to know
-about in my current project. So the time has come to write it down so I hopefully can commit it to memory 
-properly this time. While this post is postgres-specific, I'm sure other databases have the features they need
-to achieve the same thing efficiently too.
+Throughout a career as a software developer, you encounter many patterns. Some appear just often
+enough to remember that they exist, but you still need to look them up every time. I've discovered
+that writing things down helps me remember them more easily. This particular pattern is very useful
+for my current project. So, it's time to write it down and hopefully commit it to memory properly
+this time. Although this post is specific to PostgreSQL, I'm sure other databases have the necessary
+features to achieve the same results efficiently.
 
 In my current project, we have a lot of database tables with composite primary keys. Or in plain english, we
 have a bunch of tables where the primary key actually consists of more than one column. This is because a 
@@ -129,3 +129,10 @@ import java.sql.DriverManager
   println(statement.executeUpdate())
 }
 ```
+
+If you don't want to spend the storage space in your brain for this kind of pattern, my friend Øyvind has implemented
+an excellent code generator for this kind of thing in his [typo](https://oyvindberg.github.io/typo/docs/) library. It
+takes care of some other annoyances with composite keys as well, like generating tedious joins, and mapping to/from
+the database for you. Currently it generates Scala code, but I know that there's secret plans to make it generate
+Kotlin and Java as well. I highly recommend taking a look, especially if you're working with a lot of tables with
+composite keys.
