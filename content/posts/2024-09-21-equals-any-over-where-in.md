@@ -50,7 +50,7 @@ why you need to look at the query and optimize it.
 You get the same query every time. This may sound a little simple, and it's not obvious that this
 is important. But it matters once you're running in production and need to follow up performance
 over time. This makes it practical to track the query in your telemetry, database logs and in
-extensions such as `pg_stat_stataments`. It'll produce exactly one row of aggregated performance 
+extensions such as `pg_stat_statements`. It'll produce exactly one row of aggregated performance 
 data in `pg_stat_statements`, instead of a number of entries equal to the observed number of 
 placeholders in the `where id in (?, ..., ?)` clause. Here's an example of data from 
 `pg_stat_statements` where I ran both queries four times with the same parameters:
