@@ -2,7 +2,7 @@
 title = "Batch operations using composite keys in postgres over jdbc"
 date = 2024-08-30T00:00:00Z
 draft = false
-tags = ["jdbc", "java", "scala", "postgres"]
+tags = ["jdbc", "java", "scala", "postgres", "sql"]
 +++
 
 Throughout a career as a software developer, you encounter many patterns. Some appear just often
