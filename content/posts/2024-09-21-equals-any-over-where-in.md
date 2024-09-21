@@ -1,6 +1,6 @@
 +++
 title = "Consider using array operators over the SQL in operator"
-date = "2024-09-14"
+date = "2024-09-21"
 tags = ["postgres", "jdbc", "sql"]
 +++
 
