@@ -3,6 +3,9 @@ title = "Constraint propagation: Mutual recursion for fun and profit"
 date = "2025-01-04"
 modified = "2025-01-04"
 tags = ["rust", "advent of code", "algorithms"]
+[_build]
+list = "never"
+render = "always"
 +++
 
 

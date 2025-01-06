@@ -3,6 +3,9 @@ title = "Exploring a webapp using psql and pg_stat_statements"
 date = "2025-01-06"
 modified = "2025-01-06"
 tags = ["postgres"]
+[_build]
+list = "never"
+render = "always"
 +++
 
 It's always an exciting day for me when I get access to the source
