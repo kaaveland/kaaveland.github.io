@@ -8,6 +8,18 @@ list = "never"
 render = "always"
 +++
 
+I've been wanting to write this post for a while, about what I think is an
+elegant way to solve some [constraint satisfaction
+problems](https://en.wikipedia.org/wiki/Constraint_satisfaction_problem). Constraints
+tend to come up fairly often in real world programs, and some times it can be
+effective to treat them as constraint satisfaction problems. This post has a bit
+of background on constraint satisfaction problems I've encountered recently,
+then it goes over to develop Rust code for an algorithm that we can easily use
+to solve some Advent of Code problems, and we use it to make a solver for
+[sudoko](https://en.wikipedia.org/wiki/Sudoku) puzzles. Along the way, we
+explain the syntax we use, it shouldn't be too hard to understand for someone
+who is unfamiliar with the language.
+
 
 In fall 2022, my friend [Jakob](https://github.com/itzjacki/) invited our
 team to take part in [Advent of Code](https://adventofcode.com). I'd heard of
@@ -86,7 +98,9 @@ There's not a lot of scary syntax here. The `#[derive(..)]` macro
 auto-implements some traits for us, namely:
 
 - `Copy` means `Instruction` is a value that doesn't become invalid after having
-  been moved / passed to someone else, like given to a function call.
+  been moved / passed to someone else, like given to a function call. `Clone`
+  gives us the `.clone()` call, which performs a copy explicitly. We aren't
+  allowed to say we're `Copy` without also saying we're `Clone`.
 - `Debug` gives us the ability to use `Instruction` in format strings with the
   debug representation, which is great to have for test cases and
   debug-output. It makes things like `println!("{instruction:?}");` work.
@@ -239,11 +253,13 @@ instructions that match the behavior observed in an example, we filter the
 instructions by whether they return the same output as the example or
 not. There's a bit more syntax here; we chose to send the `example` to
 `compatible_instructions` by reference, saying we expect `&Example` as input. We
-didn't need to do this, since `Example` is `Copy`. `filter` receives a reference
-to whatever it is filtering, and since we chose to make `evaluate` take
-`Instruction` instead of `&Instruction` for its first parameter, we must use `*`
-on it when passing it, which creates a copy (This wouldn't work if `Instruction`
-wasn't `Copy`).
+didn't need to do this, since `Example` is `Copy`, but copying a reference may
+well be cheaper than copying 12 numbers.
+
+`filter` receives a reference to whatever it is filtering, and since we chose to
+make `evaluate` take `Instruction` instead of `&Instruction` for its first
+parameter, we must use `*` on it when passing it, which creates a copy (This
+wouldn't work if `Instruction` wasn't `Copy`).
 
 
 ``` rust
@@ -259,7 +275,7 @@ Finally, we parse the first section of the input, the one with the
 examples, then count how many examples that behave like at least 3
 _instructions_.
 
-### Mutual recursion for fun and profit
+### Part 2: Mutual recursion for fun and profit
 
 
 Part 2 asks us to map each _instruction_ to its _opcode_, the opcode being the
@@ -273,11 +289,23 @@ any instruction, so the mapping must initially be from 1 opcode to many possible
 instructions. Whenever we see a counter example, we `eliminate` that
 _instruction_ from the mapping. If this results in only 1 remaining
 _instruction_, we `choose` that instruction to be that _opcode_. `choose` will
-`eliminate` that instruction from everywhere else. Or, in Rust:
+`eliminate` that instruction from everywhere else. We will assume the existence
+of a few helper functions:
+
+- `choice_made(options, place) -> Option<usize>` will give us
+  `Some(choice)` if `place` is so constrained that there's only one possible
+  value.
+- `remove(options, place, instruction) -> bool` will remove `instruction` from
+  the possible values for `place`, and return `true` if it did so and `false`
+  if it had already been removed previously.
+- `set(options, place, instruction)`  will set `instruction` as the only
+  possible value for `place`.
+
+With these helpers, our algorithm can be easily expressed like this in Rust:
 
 ``` rust
 fn eliminate(options: &mut Options, place: usize, instruction: usize) {
-    // if we successfully removed this instruction
+    // if we removed this instruction from place for the first time
     if remove(options, place, instruction) {
         // and there's only one possible choice left
         if let Some(choice) = choice_made(options, place) {
@@ -288,6 +316,7 @@ fn eliminate(options: &mut Options, place: usize, instruction: usize) {
 }
 
 fn choose(options: &mut Options, place: usize, instruction: usize) {
+    set(options, place, instruction);
     for target in 0..options.len() {
         // since place is instruction, it can not be valid anywhere else
         if target != place {
@@ -297,21 +326,32 @@ fn choose(options: &mut Options, place: usize, instruction: usize) {
 }
 ```
 
-To do this, we need to encode `Options` somehow. This needs to be a mapping, and
-since we're mapping between very small ints, an array should do fine. The value
-can be a 16-bit unsigned integer, where each bit refers to an index in the `ALL`
+Note that here, we're working with the type `&mut Options` for `options`
+values. This is a reference which we can use to mutate the value that is passed
+to us, which is owned by our caller, it's different than placing `mut` in front
+of the parameter name.
+
+This is actually enough to solve a lot of constraint problems, it's brief, to
+the point and I think it's fairly elegant. To make it actually work, we need to
+encode `Options` somehow. This needs to be a mapping, and since we're mapping
+between very small ints, an array should do fine. The value can be a 16-bit
+unsigned integer, where each bit refers to an index in the `ALL`
 array. Initially, all the bits should be on, because we don't know anything yet:
 
 ``` rust
 type Options = [u16; 16]; // simply an alias
 
 fn initial_options() -> Options {
-    [0xffff; 16]
+    [0xffff; 16] // 0xffff is a 1-value for all 16 bits
 }
 
 fn is_possible(options: &Options, place: usize, instruction: usize) -> bool {
     // the bit that is index place is on
     options[place] & (1 << instruction) > 0
+}
+
+fn set(options: &mut Options, place: usize, instruction: usize) {
+    options[place] = 1 << instruction;
 }
 ```
 
@@ -339,6 +379,8 @@ fn choice_made(options: Options, place: usize) -> Option<usize> {
 }
 ```
 
+In here, `.count_ones()` is a builtin for integers in Rust that counts bits that
+are on, and `.trailing_zeros()` likewise counts trailing zero-bits in an int.
 And that's it, our definition from earlier works now. Now we can identify all
 the _opcodes_ by supplying counter-examples to `eliminate`:
 
@@ -651,13 +693,20 @@ And sure enough, running `sudoko(EASY_PUZZLE)` yields the answer:
 In fact, this problem is over-constrained, and we don't need every input value
 we're provided with to solve it, exactly like with the
 instruction/opcode-mapping from earlier. For example, we can remove the 9 from
-the last cell, and the 9 next to 41 near the bottom, and it'll still work. If,
-on the other hand, the problem is under-constrained, we'll need to try to apply
-some choices and just see if they work out, and currently the design we made
-won't support that. We will need to modify it so that `choose` tells us whether
-the puzzle is still possible to solve, by identifying that a contradiction has
-happened, or whether all possible choices for some `K` have disappeared. I might
-do a followup on that later.
+the last cell, and the 9 next to 41 near the bottom, and it'll still work. There
+are some improvements we could use here to make the solver a little more
+powerful. Namely, when we eliminate, we should check if it is the case that there
+exists some possibility in the row, column, or square that has not yet been
+chosen, but is the only location for that possibility within its row, column or
+square.
+
+
+If, after doing that we find a problem that is under-constrained, we'll need to
+try to apply some choices and just see if they work out, and currently the
+design we made won't support that. We will need to modify it so that `choose`
+tells us whether the puzzle is still possible to solve, by identifying that a
+contradiction has happened, or whether all possible choices for some `K` have
+disappeared. I might do a followup on that later.
 
 There's a bit of additional code that was required for making it take input from
 stdin, which is available in a little
