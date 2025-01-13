@@ -1,7 +1,7 @@
 +++
 title = "Constraint propagation: Mutual recursion for fun and profit"
 date = "2025-01-04"
-modified = "2025-01-04"
+modified = "2025-01-13"
 tags = ["rust", "advent of code", "algorithms"]
 [_build]
 list = "never"
@@ -16,7 +16,7 @@ effective to treat them as constraint satisfaction problems. This post has a bit
 of background on constraint satisfaction problems I've encountered recently,
 then it goes over to develop Rust code for an algorithm that we can easily use
 to solve some Advent of Code problems, and we use it to make a solver for
-[sudoko](https://en.wikipedia.org/wiki/Sudoku) puzzles. Along the way, we
+[sudoku](https://en.wikipedia.org/wiki/Sudoku) puzzles. Along the way, we
 explain the syntax we use, it shouldn't be too hard to understand for someone
 who is unfamiliar with the language.
 
@@ -94,18 +94,24 @@ enum Instruction {
 
 ```
 
-There's not a lot of scary syntax here. The `#[derive(..)]` macro
-auto-implements some traits for us, namely:
+There's not a lot of scary syntax here. By default, user-defined data types such
+as `Instruction` support almost no operations. The `#[derive(..)]` macro
+auto-implements some traits for us, which gives our `Instruction` type some
+capabilities, namely:
 
 - `Copy` means `Instruction` is a value that doesn't become invalid after having
   been moved / passed to someone else, like given to a function call. `Clone`
   gives us the `.clone()` call, which performs a copy explicitly. We aren't
-  allowed to say we're `Copy` without also saying we're `Clone`.
+  allowed to say we're `Copy` without also saying we're `Clone`. Without `Copy`
+  or `Clone`, data is "moved out of" our variable every time we send it
+  somewhere (like a function call), so that the old variable would become
+  invalid.
 - `Debug` gives us the ability to use `Instruction` in format strings with the
   debug representation, which is great to have for test cases and
-  debug-output. It makes things like `println!("{instruction:?}");` work.
+  debug-output. It makes things like `println!("{instruction:?}");` work. This
+  is a lot like a `.toString()` in other languages.
 - `Eq` and `PartialEq` give us `==` and `!=`, and we need `PartialEq` to get
-  `Eq`.
+  `Eq`, without this these operators aren't defined for `Instruction`.
 
 To evaluate an instruction, it needs input registers, and it should calculate
 some output. Then, we just need to read the description very carefully to
@@ -207,9 +213,11 @@ ability to call `Example::default()` to get an initialized value of the
 numbers default to 0, which is fine here.
 
 Since the `Iterator` we return is only valid as long as the string we get a
-reference to, we have to add an anonymous lifetime to it using `+ '_`. It would
-be nice if the compiler could hide this from us, and just take care of it under
-the covers.
+reference to, we have to add an anonymous lifetime to it using `+ '_`. The
+compiler uses lifetimes to _prove_ that nobody uses the `Iterator` we return
+after the string we reference has been removed. It would be nice if the compiler
+could hide this from us, and just take care of it under the covers, and maybe it
+will, at some point in the future.
 
 We need to `.unwrap()` on our regex, because compiling a regex will fail if the
 regex syntax is illegal. Since this regex is hardcoded, we know it'll always
@@ -540,8 +548,8 @@ than that, it works the same as what we had earlier.
 
 ## Solving sudoku
 
-We have what we need in order to solve sudoko now, so let's start pondering how
-to represent the board, and the possibilities. Each cell in sudoko can contain 9
+We have what we need in order to solve sudoku now, so let's start pondering how
+to represent the board, and the possibilities. Each cell in sudoku can contain 9
 possible numbers, so with the bitmask approach, that fits within 16 bits. There
 are 81 squares, and it might be convenient to index them with a pair of
 coordinates, but we can still represent it as a flat array in memory and just
@@ -552,15 +560,15 @@ We'll make a simple wrapper around the array, so we can name types more easily:
 
 ``` rust
 #[derive(Debug, Eq, PartialEq)]
-struct SudokoOptions {
+struct SudokuOptions {
     options: [u16; 81],
 }
 
-impl Default for SudokoOptions {
+impl Default for SudokuOptions {
     fn default() -> Self {
         // avoiding the zeroth bit will make it easier for us to make output later
         let everything_possible = ((1 << 10) - 1) ^ 1;
-        SudokoOptions {
+        SudokuOptions {
             options: [everything_possible; 81],
         }
     }
@@ -577,7 +585,7 @@ by using division and modulo by 3 to separate into `x` and `y`.
 
 
 ``` rust
-impl Possibilities<(usize, usize), usize> for SudokoOptions {
+impl Possibilities<(usize, usize), usize> for SudokuOptions {
     fn remove(&mut self, place: (usize, usize), value: usize) -> bool {
         let ix = place.0 + place.1 * 9;
         let bit = 1 << value;
@@ -617,8 +625,8 @@ are either `'.'`, to say that the character is unknown, or it is a
 number. Then, this should give us the solution for fully specified puzzles:
 
 ``` rust
-fn sudoko(puzzle: &str) -> SudokoOptions {
-    let mut board = SudokoOptions::default();
+fn sudoku(puzzle: &str) -> SudokuOptions {
+    let mut board = SudokuOptions::default();
     let known = puzzle.lines().enumerate().flat_map(|(y, line)| {
         line.as_bytes()
             .iter()
@@ -654,10 +662,10 @@ const EASY_PUZZLE: &str = "53..7....
 ```
 
 To compare, it would be nice to be able to make a string from a solved
-`SudokoOptions`, so let's do that as well:
+`SudokuOptions`, so let's do that as well:
 
 ``` rust
-impl SudokoOptions {
+impl SudokuOptions {
     fn try_to_string(&self) -> Result<String, String> {
         let mut out = String::new();
         for y in 0..9 {
@@ -675,7 +683,7 @@ impl SudokoOptions {
 }
 ```
 
-And sure enough, running `sudoko(EASY_PUZZLE)` yields the answer:
+And sure enough, running `sudoku(EASY_PUZZLE)` yields the answer:
 
 ``` shell
 ➜  sudoku git:(main) pbpaste| target/release/sudoku
@@ -710,7 +718,7 @@ disappeared. I might do a followup on that later.
 
 There's a bit of additional code that was required for making it take input from
 stdin, which is available in a little
-[repository](https://github.com/kaaveland/sudoko-rs/tree/main) I made from the
+[repository](https://github.com/kaaveland/sudoku-rs/tree/main) I made from the
 code in this blogpost. The repository has code to solve Advent of Code 2018/16,
 as well as a sudoku-solver. Most of the code from this blogpost is there,
 although small refactorings were done to use the `Possibilities` trait instead
