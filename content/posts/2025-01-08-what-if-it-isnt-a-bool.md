@@ -3,9 +3,6 @@ title = "What if that isn't a bool?"
 date = "2025-01-08"
 modified = "2025-01-08"
 tags = ["programming", "code"]
-[_build]
-list = "never"
-render = "always"
 +++
 
 A common way that code grows difficult to reason about is increasing the number
