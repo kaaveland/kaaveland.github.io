@@ -445,7 +445,7 @@ I discarded the result set output from this, keeping only the execution times. F
 
 This is a very unfair comparison, though. In this particular instance, DuckDB looks only at 1 column, and it is probably dictionary-encoded and run length encoded, similarly to how Arrow and Parquet does it. You can read a bit more about that [here](https://arrow.apache.org/blog/2019/09/05/faster-strings-cpp-parquet/) and [here](https://wesmckinney.com/blog/python-parquet-multithreading/). This kind of query and data distribution is essentially a best-case for columnar storage formats. An index would help postgres here, but it would likely be significantly bigger than the column DuckDB has stored, and therefore still slower.
 
-It may be much more fair to try to do a group by on a column where such shortcuts aren't possible. Let's count registrations by hour of day, which forces both implementations to look at all values of the `recordedAtTime` column.
+It may be much more fair to try to do a `group by` on a column where such shortcuts aren't possible. Let's count registrations by hour of day, which forces both implementations to look at all values of the `recordedAtTime` column.
 
 
 ```python
@@ -617,8 +617,19 @@ from times;
 
 That's more like it. So if we back the query with an appropriate index, postgres can run this query in 47s, which is quite close to DuckDB, considering that it doesn't use all my cores. This index is 7504MB, though, and took some minutes to create. In other words, I need to know that I must back this query with an index to get good performance. If this was a database server with some transactional workload, it could have consequences to run the query without the index. We're also relying on the index being in memory to get good performance here. 
 
-I'm going to clean up my mess here and call it a day. I do think it's probably true that postgres can do almost everything that DuckDB can do. But I can definitely see a case for having both, they complement each others capabilities really well.
+## Conclusion
 
+Here's the short summary:
+
+- DuckDB can't do concurrent write transactions. postgres is great for that!
+- postgres can parallelize queries, but DuckDB does this much more aggressively.
+- DuckDB is more forgiving on analytical queries if you haven't set up the correct indexes.
+- DuckDB is likely to be much faster for analytical queries on big data sets.
+- DuckDB stores data much more compactly.
+- postgres is great for sharing compute resources fairly between many concurrent users.
+- But they seem to work great together too!
+
+I'm going to clean up my mess here and call it a day. I do think it's probably true that postgres can do almost everything that DuckDB can do. But I can definitely see a case for having both, they complement each others capabilities really well.
 
 ```python
 !pg_ctl stop -D pgtemp
