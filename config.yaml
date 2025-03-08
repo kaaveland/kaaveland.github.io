@@ -3,6 +3,7 @@ relativeURLs: true
 languageCode: en-us
 title: Robin's blog
 theme: PaperMod
+
 enableEmoji: true
 enableRobotsTXT: true
 
@@ -10,6 +11,7 @@ params:
   title: Robin's blog
   author: Robin Kåveland
   DateFormat: "January 2, 2006"
+  social: true
   defaultTheme: auto
   ShowReadingTime: true
   ShowShareButtons: true
@@ -37,8 +39,6 @@ params:
       visit the [about](/about/) page, or perhaps you want to take a look at my 
       [projects](/projects/).
   socialIcons:
-    - name: x
-      url: "https://x.com/robinkaveland"
     - name: github
       url: "https://github.com/kaaveland"
     - name: linkedin
