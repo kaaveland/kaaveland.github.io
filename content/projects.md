@@ -16,3 +16,5 @@ I have a few projects on my GitHub that I sometimes work on:
   to alternatives like [fsspec/adlfs](https://github.com/fsspec/adlfs/)
 - [advent-of-code-rs](https://github.com/kaaveland/advent-of-code-rs) are my Advent of Code solutions in Rust. I've finished many of the seasons and I try
   to make the solutions run fast.
+- [kollektivkart](https://kollektivkart.arktekk.no) is map visualization of where public transit in Norway
+  gets delayed. The source code is available at [github](https://github.com/kaaveland/bus-eta).

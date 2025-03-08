@@ -1,0 +1,15 @@
+[tools]
+hugo = "0.145.0"
+
+[tasks.build]
+description = "Build the blog pages"
+run = "hugo"
+
+[tasks.clean]
+description = "Clean the slate"
+run = "rm -rf public"
+
+[tasks.deploy]
+description = "Deploy the blog pages"
+depends = ["clean", "build"]
+run = "rsync --delete -avz public/ blog@ardbeg:blog/"
