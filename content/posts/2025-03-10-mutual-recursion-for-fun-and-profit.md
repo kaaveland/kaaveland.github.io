@@ -1,11 +1,8 @@
 +++
 title = "Constraint propagation: Mutual recursion for fun and profit"
-date = "2025-01-04"
-modified = "2025-01-13"
+date = "2025-03-10"
+modified = "2025-03-10"
 tags = ["rust", "advent of code", "algorithms"]
-[_build]
-list = "never"
-render = "always"
 +++
 
 I've been wanting to write this post for a while, about what I think is an
