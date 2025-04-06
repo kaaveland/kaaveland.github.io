@@ -1,0 +1,63 @@
+{{- $authorEmail := "" }}
+{{- $authorName := "" }}
+{{- with site.Params.author }}
+{{- if reflect.IsMap . }}
+{{- with .email }}{{ $authorEmail = . }}{{ end }}
+{{- with .name }}{{ $authorName = . }}{{ end }}
+{{- else }}
+{{- $authorName  = . }}
+{{- end }}
+{{- else }}
+{{- with site.Author }}
+{{- with .email }}{{ $authorEmail = . }}{{ end }}
+{{- with .name }}{{ $authorName = . }}{{ end }}
+{{- end }}
+{{- end }}
+
+{{- $pctx := . }}
+{{- if .IsHome }}{{ $pctx = site }}{{ end }}
+{{- $pages := slice }}
+{{- if or $.IsHome $.IsSection }}
+{{- $pages = $pctx.RegularPages }}
+{{- else }}
+{{- $pages = $pctx.Pages }}
+{{- end }}
+{{- $limit := site.Config.Services.RSS.Limit }}
+{{- if ge $limit 1 }}
+{{- $pages = $pages | first $limit }}
+{{- end }}
+
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>{{ if eq .Title site.Title }}{{ site.Title }}{{ else }}{{ with .Title }}{{ . }} on {{ end }}{{ site.Title }}{{ end }}</title>
+    <subtitle>{{ site.Params.description | default site.Title }}</subtitle>
+    <link href="{{ .Permalink }}" rel="alternate" />
+    {{- with .OutputFormats.Get "atom" }}
+    <link href="{{ .Permalink }}" rel="self" type="application/atom+xml"/>
+    {{- end }}
+    <id>{{ .Permalink }}</id>
+    <updated>{{ (index $pages.ByLastmod.Reverse 0).Lastmod.Format "2006-01-02T15:04:05Z07:00" }}</updated>
+    <generator>Hugo {{ hugo.Version }}</generator>
+    {{- with $authorName }}
+    <author>
+        <name>{{ . }}</name>
+        {{- with $authorEmail }}<email>{{ . }}</email>{{ end }}
+    </author>
+    {{- end }}
+
+    {{- range $pages }}
+    {{- if and (ne .Layout `search`) (ne .Layout `archives`) }}
+    <entry>
+        <title>{{ .Title }}</title>
+        <link href="{{ .Permalink }}" />
+        <id>{{ .Permalink }}</id>
+        <updated>{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}</updated>
+        <published>{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}</published>
+        <summary>{{ with .Description }}{{ . | html }}{{ else }}{{ .Summary | html }}{{ end }}</summary>
+        {{- if and site.Params.ShowFullTextinRSS .Content }}
+        <content type="html">{{ .Content | html }}</content>
+        {{- end }}
+    </entry>
+    {{- end }}
+    {{- end }}
+</feed>

@@ -90,3 +90,25 @@ markup:
     # guessSyntax: true
     # lineNos: true
     # style: monokai
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - Atom
+
+mediaTypes:
+  "application/atom+xml":
+    suffixes:
+      - xml
+
+outputFormats:
+  Atom:
+    mediaType: "application/atom+xml"
+    baseName: "all.atom"
+    path: "feeds"
+    isPlainText: false
+    isHtml: false
+    noUgly: true
+    permalinkable: true
+
