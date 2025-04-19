@@ -24,14 +24,11 @@ jobs:
     env:
       HUGO_VERSION: 0.145.0
     steps:
-      - name: Install Hugo CLI
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
-          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
-      - name: Install Dart Sass
-        run: sudo snap install dart-sass
       - name: Checkout
         uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+      - name: Install Dart Sass
+        run: sudo snap install dart-sass
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
@@ -58,6 +55,14 @@ jobs:
           git config user.email "kaaveland@gmail.com"
           git commit -m 'Build static pages'
           git push --force origin static-pages
+      - name: sync
+        run: bunnysync sync public kaveland --ignore eugene --verbose
+        env:
+          BUNNYSYNC_KEY: ${{ secrets.BUNNYSYNC_KEY }}
+      - name: purge
+        run: bunnysync purge-zone 3644443
+        env:
+          BUNNYSYNC_API_KEY: ${{ secrets.BUNNYSYNC_API_KEY }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -72,3 +77,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+

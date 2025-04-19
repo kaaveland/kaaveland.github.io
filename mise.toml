@@ -1,5 +1,6 @@
 [tools]
 hugo = "0.145.0"
+"ubi:kaaveland/bunnysync" = "latest"
 
 [tasks.build]
 description = "Build the blog pages"
@@ -12,4 +13,4 @@ run = "rm -rf public"
 [tasks.deploy]
 description = "Deploy the blog pages"
 depends = ["clean", "build"]
-run = "rsync --delete -avz public/ blog@ardbeg:blog/"
+run = "bunnysync sync public kaveland --ignore eugene --verbose && bunnysync purge-zone kaveland"
