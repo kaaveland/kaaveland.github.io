@@ -213,7 +213,7 @@ With this setup, I need to `ssh` to the `kollektivkart` user and execute `podman
 
 ## CDN
 
-I went with [bunny.net](https://bunny.net/) for this, and set it up by making an A record point to the CDN and having it pull from my origin server at another domain. It was straightforward to set this up, and quite inexpensive too. I'm probably going to change this setup to just push my static files directly into the CDN and run APIs on a different domain in the future. 🚧
+I went with [bunny.net](https://bunny.net/) for this and set it up by making an A record point to the CDN and having it pull from my origin server at another domain. It was straightforward to set this up, and quite inexpensive too. I'm probably going to change this setup to just push my static files directly into the CDN and run APIs on a different domain in the future. 🚧
 
 ## Conclusion
 
