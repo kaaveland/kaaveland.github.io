@@ -56,7 +56,7 @@ jobs:
           git commit -m 'Build static pages'
           git push --force origin static-pages
       - name: sync
-        run: thumper sync public kaveland --ignore eugene --verbose
+        run: thumper sync public kaveland --ignore eugene --ignore thumper --verbose --concurrency 4
         env:
           THUMPER_KEY: ${{ secrets.BUNNYSYNC_KEY }}
       - name: purge

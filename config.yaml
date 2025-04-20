@@ -68,6 +68,10 @@ menu:
       name: eugene
       url: /eugene/
       weight: 25
+    - identifier: thumper
+      name: thumper
+      url: /thumper/
+      weight: 28
     - identifier: tags
       name: tags
       url: /tags/

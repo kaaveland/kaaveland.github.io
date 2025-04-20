@@ -18,3 +18,4 @@ I have a few projects on my GitHub that I sometimes work on:
   to make the solutions run fast.
 - [kollektivkart](https://kollektivkart.arktekk.no) is map visualization of where public transit in Norway
   gets delayed. The source code is available at [github](https://github.com/kaaveland/bus-eta).
+- [thumper](https://github.com/kaaveland/thumper) is a CLI tool for deploying static assets to [BunnyCDN](bunny.net). I use it to deploy this site, and a few others.
