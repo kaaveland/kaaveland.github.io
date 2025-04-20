@@ -58,7 +58,7 @@ Here are some technologies and problems that I have a lot of experience working 
 These things spark joy right now, and I would love to get to work with them in the future:
 
 - European cloud providers
-- Polars, Databricks
+- Polars, DuckDB, Databricks
 - Google BigQuery, Google Cloud
 - Rust
 - Building great teams, creating a culture around learning and sharing
