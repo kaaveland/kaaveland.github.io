@@ -56,13 +56,13 @@ jobs:
           git commit -m 'Build static pages'
           git push --force origin static-pages
       - name: sync
-        run: bunnysync sync public kaveland --ignore eugene --verbose
+        run: thumper sync public kaveland --ignore eugene --verbose
         env:
-          BUNNYSYNC_KEY: ${{ secrets.BUNNYSYNC_KEY }}
+          THUMPER_KEY: ${{ secrets.BUNNYSYNC_KEY }}
       - name: purge
-        run: bunnysync purge-zone 3644443
+        run: thumper purge-zone 3644443
         env:
-          BUNNYSYNC_API_KEY: ${{ secrets.BUNNYSYNC_API_KEY }}
+          THUMPER_API_KEY: ${{ secrets.BUNNYSYNC_API_KEY }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
