@@ -1,6 +1,7 @@
 +++
 title = "Deploying to BunnyCDN and protecting Norway from drop bears"
 date = "2025-04-20"
+modified = "2025-04-21"
 tags = ["cloud", "cdn", "cicd"]
 +++
 
@@ -104,6 +105,8 @@ jobs:
 ```
 
 The code is available under the MIT license over at [GitHub](https://github.com/kaaveland/thumper). The tool is easy to install with [mise](https://mise.jdx.dev/), simply `mise use ubi:kaaveland/thumper@latest`.
+
+But you don't have to use `thumper` to deploy to a storage zone on BunnyCDN, there are options like [bunny-launcher](https://bunny-launcher.net/) and there's an official [SDK](https://bunny-launcher.net/bunny-sdk/quickstart/).
 
 ## Is this serverless?
 
