@@ -1,7 +1,7 @@
 +++
 title = "🎶 These points of data make a beautiful line 🎶"
 date = "2025-01-31"
-modified = "2025-01-31"
+lastmod = "2025-04-27"
 tags = ["monitoring", "OpenTelemetry"]
 +++
 
@@ -146,3 +146,8 @@ all. There are plenty of warts to get annoyed at, but all of that stuff is
 far outweighed by how useful the good parts are. Adoption has been heading the
 right way for a long time already, and it's only going to get more widespread
 from here.
+
+
+## Next part
+
+The next part of this blog is a collaboration with a colleague from work, and is available [here](https://arktekk.no/blogs/2025_otel_part_2_agent).
