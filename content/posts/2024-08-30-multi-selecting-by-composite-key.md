@@ -1,7 +1,7 @@
 +++
 title = "Batch operations using composite keys in postgres over jdbc"
 date = 2024-08-30T00:00:00Z
-draft = false
+lastmod = 2024-05-30
 tags = ["jdbc", "java", "scala", "postgres", "sql"]
 +++
 
@@ -136,3 +136,8 @@ library. It takes care of some other annoyances with composite keys as well, lik
 mapping to/from the database for you. Currently, it generates Scala code, but I know that there's secret plans 
 to make it generate Kotlin and Java as well soon. I highly recommend taking a look, especially 
 if you're working with a lot of tables with composite keys.
+
+## More tips on composite keys?
+
+- [Making it easier to write joins](/posts/2025-04-30-that-join-is-natural)
+- [Checking for missing indexes on foreign keys](/posts/2025-04-04-finding-missing-indexes-in-pg-catalog)
