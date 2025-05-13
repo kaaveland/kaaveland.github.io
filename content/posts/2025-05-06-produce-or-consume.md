@@ -1,5 +1,5 @@
 +++
-title = "To create, or be consumed, that is the question?"
+title = "To create, or be consumed? That is the question"
 date = "2025-05-06"
 tags = [
     "writing", "thoughts"
