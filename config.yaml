@@ -43,6 +43,8 @@ params:
       url: "https://github.com/kaaveland"
     - name: linkedin
       url: "https://www.linkedin.com/in/robin-kåveland-8157a5a6"
+    - name: email
+      url: "mailto:robin@kaveland.no"
 
   cover:
     hidden: true # hide everywhere but not in structured data
