@@ -2,8 +2,6 @@
 title = "No-ops linux part 3: It puts the data in the pond. Nightly."
 date = "2025-05-14T18:00:00Z"
 tags = ["cloud", "linux", "ops", "cdn", "duckdb", "caddy", "ansible"]
-build = "render"
-cascade = { _build = { list = "never", render = "always" } }
 +++
 
 This post is part of the series on no-ops linux deployment. The [first post](/posts/2025-05-13-fire-and-forget-linux-p1) covered local development of linux server configuration and essential configuration. The [previous installment](/posts/2025-05-14-fire-and-forget-linux-p2) covers a janky podman installation and configures a reverse proxy to send traffic to a simple container deployment. This is the [final post](/posts/2025-05-14-fire-and-forget-linux-p3). It covers a more challenging deployment with jobs and rolling restarts, and discusses the strengths and weaknesses of this approach to hosting.

@@ -2,8 +2,6 @@
 title = "No-ops Linux part 1: Automation, security and essentials"
 date = "2025-05-13"
 tags = ["cloud", "linux", "ops", "cdn", "duckdb", "caddy", "ansible"]
-build = "render"
-cascade = { _build = { list = "never", render = "always" } }
 +++
 
 In [Running containers on no-ops linux in 2025](/posts/2025-04-14-running-containers-on-the-cheap) I wrote about moving my hobby projects to a European cloud provider. I did an initial, manual setup in [Hetzner](https://www.hetzner.com/), which I've now automated. This weekend, I tested the setup. It takes me a few minutes now to get everything moved to a new host, and most of that has to do with DNS. I've got a reproducible setup, I can quickly provision up a machine locally or in any cloud that has Ubuntu 24.04. Reproducible infrastructure is ✨liberating✨
