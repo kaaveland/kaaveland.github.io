@@ -1,6 +1,6 @@
 +++
 title = "Using SQL to turn all the buses around"
-date = "2025-05-28"
+date = "2025-05-28T19:30:00.0+02:00"
 tags = ["data", "sql", "duckdb", "seaborn", "visualization"]
 +++
 
@@ -20,7 +20,7 @@ Some setup is necessary. This is a jupyter notebook that is available [here](htt
 uv run --with jupyter --with duckdb --with seaborn --with jupysql jupyter lab
 ```
 
-We'll be using data from [Entur](https://data.entur.no/domain/public-transport-data). This contains data for many years for all bus lanes in the Trondheim region (and many others). I've got a copy of this data going back to 2023 on my machine. But that's a lot more than we need for this exercise, so I've done some preparation and made a smaller download we can use. I've collected the ATB data for 2024 on [this address](https://kaaveland-bus-eta-data.hel1.your-objectstorage.com/atb_legs.parquet) (~900MB download).
+We'll be using data from [Entur](https://data.entur.no/domain/public-transport-data). This contains data for many years for all bus lanes in the Trondheim region (and many others). I've got a copy of this data going back to 2023 on my machine. But that's a lot more than we need for this exercise, so I've done some preparation and made a smaller download we can use. I've collected the ATB (my regional public transit) data for 2024 on [this address](https://kaaveland-bus-eta-data.hel1.your-objectstorage.com/atb_legs.parquet) (~900MB download).
 
 I've done a bunch of cleanups on this data, like removing all the buses that were travelling exceedingly close to the speed of light. I've also connected each stop registration in the bus journey with the following stop registration, so we can look at driving durations on individual legs. The [code](https://github.com/kaaveland/bus-eta/blob/main/kollektivkart/etl/legs.py) for that is open source.
 
