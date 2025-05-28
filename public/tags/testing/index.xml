@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Testing on Robin's blog</title><link>https://kaveland.no/tags/testing/</link><description>Recent content in Testing on Robin's blog</description><generator>Hugo -- 0.145.0</generator><language>en-us</language><lastBuildDate>Thu, 27 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://kaveland.no/tags/testing/index.xml" rel="self" type="application/rss+xml"/><item><title>Using short lived postgres servers for testing</title><link>https://kaveland.no/posts/2024-05-27-shortlived-postgres-servers/</link><pubDate>Mon, 27 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-27-shortlived-postgres-servers/</guid><description>&lt;p>Database servers are usually long-lived, and important parts of the infrastructure
+that we build on. We rarely set them up from scratch, because we have to take
+such good care of them over time. I think this causes a lot of people to think
+that setting up a database server is some mysteriously difficult ordeal. To be clear,
+that&amp;rsquo;s actually true, if you need high availability and a solid recovery point objective.
+But there are a lot of use cases where that&amp;rsquo;s overkill, for example short-lived
+test environments, or CI/CD pipelines.&lt;/p></description></item></channel></rss>

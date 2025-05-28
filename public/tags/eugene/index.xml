@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Eugene on Robin's blog</title><link>https://kaveland.no/tags/eugene/</link><description>Recent content in Eugene on Robin's blog</description><generator>Hugo -- 0.145.0</generator><language>en-us</language><lastBuildDate>Wed, 16 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://kaveland.no/tags/eugene/index.xml" rel="self" type="application/rss+xml"/><item><title>Checking SQL migrations with eugene</title><link>https://kaveland.no/posts/2025-04-16-whats-up-eugene/</link><pubDate>Wed, 16 Apr 2025 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2025-04-16-whats-up-eugene/</guid><description>&lt;p>It’s been almost a year since I last posted an update on &lt;a href="https://github.com/kaaveland/eugene/">eugene&lt;/a>, the CLI tool I’m building to help people write safer SQL migration scripts for postgres. I announced this tool in &lt;a href="https://kaveland.no/posts/2024-05-06-careful-with-that-lock-eugene-pt-2">Careful with That Lock, Eugene: Part 2&lt;/a>. At the time, &lt;code>eugene&lt;/code> would execute a single SQL script, recording all the locks acquired and warn about possible downtime due to migrations.&lt;/p>
+&lt;p>It could produce JSON suitable for automated tooling and Markdown suitable for human reading and using in CI comments/checks. That version was already good enough for me to start using in real projects — but it&amp;rsquo;s improved a lot since then, it&amp;rsquo;s now easy to run with almost no setup.&lt;/p></description></item><item><title>Using short lived postgres servers for testing</title><link>https://kaveland.no/posts/2024-05-27-shortlived-postgres-servers/</link><pubDate>Mon, 27 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-27-shortlived-postgres-servers/</guid><description>&lt;p>Database servers are usually long-lived, and important parts of the infrastructure
+that we build on. We rarely set them up from scratch, because we have to take
+such good care of them over time. I think this causes a lot of people to think
+that setting up a database server is some mysteriously difficult ordeal. To be clear,
+that&amp;rsquo;s actually true, if you need high availability and a solid recovery point objective.
+But there are a lot of use cases where that&amp;rsquo;s overkill, for example short-lived
+test environments, or CI/CD pipelines.&lt;/p></description></item><item><title>Building documentation for Eugene</title><link>https://kaveland.no/posts/2024-05-20-building-docsite-for-eugene/</link><pubDate>Mon, 20 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-20-building-docsite-for-eugene/</guid><description>&lt;p>I&amp;rsquo;ve been busy working on a &lt;a href="https://kaveland.no/eugene">documentation site for eugene&lt;/a>, and I
+think it&amp;rsquo;s starting to look pretty good. I wanted to write down some of
+my thoughts around the process so far, and some of the things I&amp;rsquo;ve learned.&lt;/p>
+&lt;p>It&amp;rsquo;s just been a few days since I ported my blog to hugo, so since I was
+already feeling like I was up to speed on that, I decided I&amp;rsquo;d try using it
+for the eugene documentation too. I experimented with a few different
+setups around the &lt;a href="https://themes.gohugo.io/themes/hugo-book/">hugo-book&lt;/a>
+theme, but it ended up feeling like I was having to configure a bit
+too much for my taste. I think it looked really nice, but the setup
+felt a bit janky and complicated, with having the submodules and
+everything in the eugene repo itself. I think my problem here is
+just that doing this with hugo would require me to learn more about
+hugo than I&amp;rsquo;m ready for right now.&lt;/p></description></item><item><title>Linting postgres migration scripts</title><link>https://kaveland.no/posts/2024-05-16-linting-postgres-migration-scripts/</link><pubDate>Thu, 16 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-16-linting-postgres-migration-scripts/</guid><description>&lt;p>I have been working quite a bit on picking up dangerous migration patterns in
+migration scripts over at the &lt;a href="https://github.com/kaaveland/eugene">eugene repository&lt;/a>
+lately. A major feature I&amp;rsquo;ve added is syntax tree analysis, so that we can pick
+up some patterns without having to run the SQL scripts. This isn&amp;rsquo;t quite as precise
+as running the scripts, but it&amp;rsquo;s a lot faster and can catch quite a few
+common mistakes. So let&amp;rsquo;s take a look at how it works!&lt;/p></description></item><item><title>Careful with That Lock, Eugene: Part 2</title><link>https://kaveland.no/posts/2024-05-06-careful-with-that-lock-eugene-pt-2/</link><pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-06-careful-with-that-lock-eugene-pt-2/</guid><description>&lt;p>A while back, I wrote
+&lt;a href="https://kaveland.no/posts/2024-04-12-careful-with-that-lock-eugene">Careful with That Lock, Eugene&lt;/a> about an
+idea for how to check if a database migration is likely to disturb production.
+That post came about after having an inspiring chat with a colleague about
+the advantages of transactional migration scripts and the ability to check
+the postgres system catalog views before committing a transaction.&lt;/p>
+&lt;p>Over the past few weeks, I&amp;rsquo;ve been experimenting with this idea to test if I can
+use it to build valuable safety checks for DDL migrations. Kind of like
+&lt;a href="https://www.shellcheck.net/">shellcheck&lt;/a>, but for database DDL migrations.&lt;/p></description></item><item><title>Careful with That Lock, Eugene</title><link>https://kaveland.no/posts/2024-04-12-careful-with-that-lock-eugene/</link><pubDate>Fri, 12 Apr 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-04-12-careful-with-that-lock-eugene/</guid><description>&lt;p>It is rewarding to work on software that people care about and use all around
+the clock. This constant usage means we can&amp;rsquo;t simply take the system offline for
+maintenance without upsetting users. Therefore, techniques that allow us to
+update the software seamlessly without downtime or compromising service
+quality are incredibly valuable.&lt;/p>
+&lt;p>Most projects I&amp;rsquo;ve worked on use a relational database for persistence, and have
+some sort of migration tool like flyway or liquibase to make changes to the
+database schema. This post is about a particular kind of migration situation
+that, in my experience, most developers who work on such projects will encounter
+at some point in their career. They will want to apply a simple, and seemingly
+innocent migration, like adding a column to a table and it&amp;rsquo;ll cause some number
+of requests to fail, or maybe even a small outage. There are some tricks we can
+use here to reduce risk and automatically detect some patterns that cause this
+problem.&lt;/p></description></item></channel></rss>

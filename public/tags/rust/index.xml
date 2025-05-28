@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Rust on Robin's blog</title><link>https://kaveland.no/tags/rust/</link><description>Recent content in Rust on Robin's blog</description><generator>Hugo -- 0.145.0</generator><language>en-us</language><lastBuildDate>Wed, 16 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://kaveland.no/tags/rust/index.xml" rel="self" type="application/rss+xml"/><item><title>Checking SQL migrations with eugene</title><link>https://kaveland.no/posts/2025-04-16-whats-up-eugene/</link><pubDate>Wed, 16 Apr 2025 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2025-04-16-whats-up-eugene/</guid><description>&lt;p>It’s been almost a year since I last posted an update on &lt;a href="https://github.com/kaaveland/eugene/">eugene&lt;/a>, the CLI tool I’m building to help people write safer SQL migration scripts for postgres. I announced this tool in &lt;a href="https://kaveland.no/posts/2024-05-06-careful-with-that-lock-eugene-pt-2">Careful with That Lock, Eugene: Part 2&lt;/a>. At the time, &lt;code>eugene&lt;/code> would execute a single SQL script, recording all the locks acquired and warn about possible downtime due to migrations.&lt;/p>
+&lt;p>It could produce JSON suitable for automated tooling and Markdown suitable for human reading and using in CI comments/checks. That version was already good enough for me to start using in real projects — but it&amp;rsquo;s improved a lot since then, it&amp;rsquo;s now easy to run with almost no setup.&lt;/p></description></item><item><title>Constraint propagation: Mutual recursion for fun and profit</title><link>https://kaveland.no/posts/2025-03-10-mutual-recursion-for-fun-and-profit/</link><pubDate>Mon, 10 Mar 2025 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2025-03-10-mutual-recursion-for-fun-and-profit/</guid><description>&lt;p>I&amp;rsquo;ve been wanting to write this post for a while, about what I think is an
+elegant way to solve some &lt;a href="https://en.wikipedia.org/wiki/Constraint_satisfaction_problem">constraint satisfaction
+problems&lt;/a>. Constraints
+tend to come up fairly often in real world programs, and some times it can be
+effective to treat them as constraint satisfaction problems. This post has a bit
+of background on constraint satisfaction problems I&amp;rsquo;ve encountered recently,
+then it goes over to develop Rust code for an algorithm that we can easily use
+to solve some Advent of Code problems, and we use it to make a solver for
+&lt;a href="https://en.wikipedia.org/wiki/Sudoku">sudoku&lt;/a> puzzles. Along the way, we
+explain the syntax we use, it shouldn&amp;rsquo;t be too hard to understand for someone
+who is unfamiliar with the language.&lt;/p></description></item><item><title>Building documentation for Eugene</title><link>https://kaveland.no/posts/2024-05-20-building-docsite-for-eugene/</link><pubDate>Mon, 20 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-20-building-docsite-for-eugene/</guid><description>&lt;p>I&amp;rsquo;ve been busy working on a &lt;a href="https://kaveland.no/eugene">documentation site for eugene&lt;/a>, and I
+think it&amp;rsquo;s starting to look pretty good. I wanted to write down some of
+my thoughts around the process so far, and some of the things I&amp;rsquo;ve learned.&lt;/p>
+&lt;p>It&amp;rsquo;s just been a few days since I ported my blog to hugo, so since I was
+already feeling like I was up to speed on that, I decided I&amp;rsquo;d try using it
+for the eugene documentation too. I experimented with a few different
+setups around the &lt;a href="https://themes.gohugo.io/themes/hugo-book/">hugo-book&lt;/a>
+theme, but it ended up feeling like I was having to configure a bit
+too much for my taste. I think it looked really nice, but the setup
+felt a bit janky and complicated, with having the submodules and
+everything in the eugene repo itself. I think my problem here is
+just that doing this with hugo would require me to learn more about
+hugo than I&amp;rsquo;m ready for right now.&lt;/p></description></item><item><title>Linting postgres migration scripts</title><link>https://kaveland.no/posts/2024-05-16-linting-postgres-migration-scripts/</link><pubDate>Thu, 16 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-16-linting-postgres-migration-scripts/</guid><description>&lt;p>I have been working quite a bit on picking up dangerous migration patterns in
+migration scripts over at the &lt;a href="https://github.com/kaaveland/eugene">eugene repository&lt;/a>
+lately. A major feature I&amp;rsquo;ve added is syntax tree analysis, so that we can pick
+up some patterns without having to run the SQL scripts. This isn&amp;rsquo;t quite as precise
+as running the scripts, but it&amp;rsquo;s a lot faster and can catch quite a few
+common mistakes. So let&amp;rsquo;s take a look at how it works!&lt;/p></description></item><item><title>Careful with That Lock, Eugene: Part 2</title><link>https://kaveland.no/posts/2024-05-06-careful-with-that-lock-eugene-pt-2/</link><pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-06-careful-with-that-lock-eugene-pt-2/</guid><description>&lt;p>A while back, I wrote
+&lt;a href="https://kaveland.no/posts/2024-04-12-careful-with-that-lock-eugene">Careful with That Lock, Eugene&lt;/a> about an
+idea for how to check if a database migration is likely to disturb production.
+That post came about after having an inspiring chat with a colleague about
+the advantages of transactional migration scripts and the ability to check
+the postgres system catalog views before committing a transaction.&lt;/p>
+&lt;p>Over the past few weeks, I&amp;rsquo;ve been experimenting with this idea to test if I can
+use it to build valuable safety checks for DDL migrations. Kind of like
+&lt;a href="https://www.shellcheck.net/">shellcheck&lt;/a>, but for database DDL migrations.&lt;/p></description></item></channel></rss>
