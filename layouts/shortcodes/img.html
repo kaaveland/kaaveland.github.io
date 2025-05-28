@@ -1,0 +1,3 @@
+{{ with .Get "src" }}
+<img src="{{ . | relURL }}" alt="{{ $.Get "alt" | default "" }}" />
+{{ end }}
