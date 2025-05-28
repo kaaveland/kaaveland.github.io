@@ -292,7 +292,7 @@ order by month;
 sns.catplot(df, y='month', x='count', hue='directionRef', kind='bar');
 ```
     
-![png](LinesEDA_7_0.png)
+![png](./LinesEDA_7_0.png)
     
 
 Did you see that? They just turned the directions around! It's easy to miss this kind of thing, but it happens all the time. Gathering data from the physical world is complex and difficult!
@@ -318,7 +318,7 @@ order by operatingDate;
 sns.catplot(df, y='operatingDate', x='count', hue='directionRef', kind='bar');
 ```
     
-![png](LinesEDA_9_0.png)
+![png](./LinesEDA_9_0.png)
 
 We can probably assume that `directionRef` is consistent within one day. This means that if we could build a mapping from `lineRef, operatingDate` to some "canonical" direction, we can handle this issue. That's great news! Building that mapping is the topic of this analysis.
 
@@ -808,7 +808,7 @@ select count(*) as count, directionRef,
 where
   ((from_stop = 'Studentersamfundet' and to_stop = 'Nidarosdomen') 
    or (from_stop = 'Nidarosdomen' and to_stop = 'Studentersamfundet'))
-  and (lineRef = 'ATB:Line:2_3' 
+  and (./LineRef = 'ATB:Line:2_3' 
        and operatingDate between '2024-06-01' and '2024-06-10')
 group by all
 order by operatingDate;
@@ -826,7 +826,7 @@ sns.catplot(
 
 
     
-![png](LinesEDA_17_0.png)
+![png](./LinesEDA_17_0.png)
     
 
 
@@ -859,7 +859,7 @@ sns.catplot(
 );
 ```
     
-![png](LinesEDA_19_0.png)
+![png](./LinesEDA_19_0.png)
 
 
 This appears to be stable all year. Great news! We're not entirely home-free, though.
@@ -876,7 +876,7 @@ select count(*) as count, directionRef,
 where
   ((from_stop = 'Studentersamfundet' and to_stop = 'Nidarosdomen') 
     or (from_stop = 'Nidarosdomen' and to_stop = 'Studentersamfundet'))
-  and (lineRef = 'ATB:Line:2_1')
+  and (./LineRef = 'ATB:Line:2_1')
 group by all
 order by month;
 """).df()
@@ -891,7 +891,7 @@ sns.catplot(
 );
 ```
     
-![png](LinesEDA_21_0.png)
+![png](./LinesEDA_21_0.png)
 
 
 ## Huge disappointment!
@@ -925,7 +925,7 @@ select
   -- Changed this! We'll propagate the first directionRef seen 
   -- for this line/origin/destination to all of eternity
   min_by(directionRef, operatingDate) over (
-      partition by (lineRef, origin, destination)
+      partition by (./LineRef, origin, destination)
   ) as canonical_direction,
   origin,
   destination,
@@ -978,7 +978,7 @@ sns.catplot(
 );
 ```
     
-![png](LinesEDA_25_0.png)
+![png](./LinesEDA_25_0.png)
 
 ## Looks pretty good!
 
@@ -1033,7 +1033,7 @@ sns.relplot(
 );
 ```
 
-![png](LinesEDA_27_0.png)
+![png](./LinesEDA_27_0.png)
 
 Makes a difference! I'll make a job that keeps something like the `route_name` table up to date so that I can keep track of the "true" direction of a line for my analysis. Should be fun to see if this works with all ~500 million legs in the main data set! I'm sure it'll be fine; DuckDB chews through this notebook in just a few seconds after the initial download is done.
 
