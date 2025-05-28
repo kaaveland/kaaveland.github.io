@@ -1,8 +1,9 @@
 baseURL: https://kaveland.no/
-relativeURLs: true
 languageCode: en-us
 title: Robin's blog
 theme: PaperMod
+relativeURLs: false
+canonifyURLs: false
 
 enableEmoji: true
 enableRobotsTXT: true
