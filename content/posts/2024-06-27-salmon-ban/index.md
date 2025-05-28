@@ -56,10 +56,7 @@ sns.displot(
 ).set_titles("Distribution of salmon caught by weight");
 ```
 
-
-
-![png](Salmon%202024_1_0.png)
-
+{{< img src="/posts/2024-06-27-salmon-ban/Salmon%202024_1_0.png" alt="png" >}}
 
 
 What this shows is that very few salmon ever grow to exceed 10kg. A histogram like this isn't the best way to appreciate just how rare those fish are, so let's try to plot the cumulative distribution instead. It's a little trickier to read these plots if you're not used to them, but the idea is that the curve shows you what percentage of the total is below a given weight. It's pretty informative, once you know how to read it, so bear with me:
@@ -74,11 +71,7 @@ for ax in g.axes.flat:
     ax.axvline(x=7, color="red", linestyle="--")
 ```
 
-
-
-![png](Salmon%202024_3_0.png)
-
-
+{{< img src="/posts/2024-06-27-salmon-ban/Salmon%202024_3_0.png" alt="png" >}}
 
 I've plotted a vertical red bar at 7kg, because that's the weight at which the Atlantic Salmon is considered to be a "big salmon". The way you read this plot, is that you find out where on the Y-axis the curve is at 7kg, and that tells you the proportion of fish that is **smaller** than that. In this case, it looks like perhaps 80% of the salmon in the dataset are smaller than 7kg, so it's pretty rare to catch such a big fish.
 
@@ -94,11 +87,7 @@ sns.countplot(
 ).set_title("Number of salmon caught by river");
 ```
 
-
-
-![png](Salmon%202024_5_0.png)
-
-
+{{< img src="/posts/2024-06-27-salmon-ban/Salmon%202024_5_0.png" alt="png" >}}
 
 This tells me that most rivers in my dataset do not have a significant amount of catches of big salmon, so we'll focus on the ones that do, and remove all other rivers. This also makes it easier to compare rivers side by side later on, since we have fewer of them. We'll focus on the 4 big ones:
 
@@ -125,11 +114,7 @@ sns.relplot(
 );
 ```
 
-
-
-![png](Salmon%202024_7_0.png)
-
-
+{{< img src="/posts/2024-06-27-salmon-ban/Salmon%202024_7_0.png" alt="png" >}}
 
 I think it's probably going to be easier for us to study what's going on if we throw out all data before 2015, since there's so little data for the earlier seasons. After that, we can take a look at how catch statistics distribute throughout the fishing season, and try to compare to the current one.
 
@@ -155,11 +140,7 @@ for ax in sns.relplot(
     ax.set_ylim(0, 80)
 ```
 
-
-
-![png](Salmon%202024_9_0.png)
-
-
+{{< img src="/posts/2024-06-27-salmon-ban/Salmon%202024_9_0.png" alt="png" >}}
 
 The shaded area is a 95% confidence interval. I think this plot shows us a number of interesting facts:
 
@@ -184,14 +165,9 @@ sns.relplot(
     catches.astype({'year': 'string'}), x="day_of_season", y="catches", row="size",
     col="river", kind="line", hue="season", height=4, facet_kws={"sharey": False}
 ).set_ylabels("Cumulative catches");
-
 ```
 
-
-
-![png](Salmon%202024_11_0.png)
-
-
+{{< img src="/posts/2024-06-27-salmon-ban/Salmon%202024_11_0.png" alt="png" >}}
 
 Ouch. What can I say, it looks like the government was right to ban salmon fishing in these rivers for 2024. The situation looks absolutely dire. Maybe there have been worse starts to the season in one or two of these rivers, but what we're seeing seems to be that the situation is bad in all of them simultaneously. Just to make sure we're not misunderstanding something, let's plot the individual lines for all years too:
 
@@ -202,11 +178,7 @@ sns.relplot(
 ).set_ylabels("Cumulative catches");
 ```
 
-
-
-![png](Salmon%202024_13_0.png)
-
-
+{{< img src="/posts/2024-06-27-salmon-ban/Salmon%202024_13_0.png" alt="png" >}}
 
 Okay, it's bad in all four of these rivers, particularly for big salmon. For Stjørdalselva and Gaula, we have worse seasons on record, but just barely, and that was a summer with a drought in this region (2018). For Orkla and Namsen, we're just looking at the worst season on record.
 

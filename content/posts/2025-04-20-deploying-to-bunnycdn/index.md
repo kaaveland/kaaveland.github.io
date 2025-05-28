@@ -21,7 +21,7 @@ Of course, we can't beam a TCP packet on a light beam. There are all sorts of ob
 
 Pulling my page from the CDN instead, it appears to take around 100 milliseconds. That's because my site is being cached in lots of locations around the world by BunnyCDN:
 
-![A world map showing CDN data center locations, with world wide coverage.](bunny_pop_map.png)
+{{< img src="/posts/2025-04-20-deploying-to-bunnycdn/bunny_pop_map.png" alt="A world map showing CDN data center locations, with world wide coverage." >}}
 
 It's a pretty respectable improvement. Any page that expects a global audience would do well to put at least the static assets on a CDN. It is an easy win for performance and doesn't have to be a big investment.
 
@@ -59,7 +59,7 @@ Using Storage Zones for deployments sort of fixes this, because Storage Zones ar
 
 The pull zone will still need to fetch from the Storage Zone, but the Storage Zone is going to be a lot closer than the origin server. Australians no longer need to fetch cat pictures from Finland. They can get them from Sydney instead. Cache expiration time no longer needs to be absurdly long. The drop bears are pleased. Norway is saved.
 
-{{< figure src="happy_dropbear.jpg" caption="A very pleased drop bear. An AI generated this. It was much too dangerous to obtain a real photograph." alt="An image showing a very pleased drop bear" >}}
+{{< figure src="/posts/2025-04-20-deploying-to-bunnycdn/happy_dropbear.jpg" caption="A very pleased drop bear. An AI generated this. It was much too dangerous to obtain a real photograph." alt="An image showing a very pleased drop bear" >}}
 
 ## If Storage Zones are great, why wait?
 

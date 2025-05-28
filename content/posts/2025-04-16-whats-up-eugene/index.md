@@ -8,7 +8,7 @@ It’s been almost a year since I last posted an update on [eugene](https://gith
 
 It could produce JSON suitable for automated tooling and Markdown suitable for human reading and using in CI comments/checks. That version was already good enough for me to start using in real projects — but it's improved a lot since then, it's now easy to run with almost no setup.
 
-![img.png](img.png)
+{{< img src="/posts/2025-04-16-whats-up-eugene/img.png" alt="png" >}}
 
 
 ## What's new
