@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Software Engineering on Robin's blog</title><link>https://kaveland.no/tags/software-engineering/</link><description>Recent content in Software Engineering on Robin's blog</description><generator>Hugo -- 0.145.0</generator><language>en-us</language><lastBuildDate>Thu, 04 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://kaveland.no/tags/software-engineering/index.xml" rel="self" type="application/rss+xml"/><item><title>Friends don't let friends export to CSV</title><link>https://kaveland.no/posts/2024-03-10-friends-dont-let-friends-export-csv/</link><pubDate>Sun, 24 Mar 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-03-10-friends-dont-let-friends-export-csv/</guid><description>&lt;p>I worked for a few years in the intersection between data science and software
+engineering. On the whole, it was a really enjoyable time and I&amp;rsquo;d like to have
+the chance to do so again at some point. One of the least enjoyable experiences
+from that time was to deal with big CSV exports. Unfortunately, this file format
+is still very common in the data science space. It is easy to understand why &amp;ndash;
+it seems to be ubiquitous, present everywhere, it&amp;rsquo;s human-readable, it&amp;rsquo;s less
+verbose than options like JSON and XML, it&amp;rsquo;s super easy to produce from almost
+any tool. What&amp;rsquo;s not to like?&lt;/p></description></item></channel></rss>

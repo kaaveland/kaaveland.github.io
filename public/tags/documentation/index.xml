@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Documentation on Robin's blog</title><link>https://kaveland.no/tags/documentation/</link><description>Recent content in Documentation on Robin's blog</description><generator>Hugo -- 0.145.0</generator><language>en-us</language><lastBuildDate>Mon, 20 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://kaveland.no/tags/documentation/index.xml" rel="self" type="application/rss+xml"/><item><title>Building documentation for Eugene</title><link>https://kaveland.no/posts/2024-05-20-building-docsite-for-eugene/</link><pubDate>Mon, 20 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-20-building-docsite-for-eugene/</guid><description>&lt;p>I&amp;rsquo;ve been busy working on a &lt;a href="https://kaveland.no/eugene">documentation site for eugene&lt;/a>, and I
+think it&amp;rsquo;s starting to look pretty good. I wanted to write down some of
+my thoughts around the process so far, and some of the things I&amp;rsquo;ve learned.&lt;/p>
+&lt;p>It&amp;rsquo;s just been a few days since I ported my blog to hugo, so since I was
+already feeling like I was up to speed on that, I decided I&amp;rsquo;d try using it
+for the eugene documentation too. I experimented with a few different
+setups around the &lt;a href="https://themes.gohugo.io/themes/hugo-book/">hugo-book&lt;/a>
+theme, but it ended up feeling like I was having to configure a bit
+too much for my taste. I think it looked really nice, but the setup
+felt a bit janky and complicated, with having the submodules and
+everything in the eugene repo itself. I think my problem here is
+just that doing this with hugo would require me to learn more about
+hugo than I&amp;rsquo;m ready for right now.&lt;/p></description></item></channel></rss>

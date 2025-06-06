@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Hugo on Robin's blog</title><link>https://kaveland.no/tags/hugo/</link><description>Recent content in Hugo on Robin's blog</description><generator>Hugo -- 0.145.0</generator><language>en-us</language><lastBuildDate>Thu, 27 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://kaveland.no/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>Norwegian Wild Salmon Fishing Ban of 2024</title><link>https://kaveland.no/posts/2024-06-27-salmon-ban/</link><pubDate>Thu, 27 Jun 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-06-27-salmon-ban/</guid><description>&lt;p>For this blog post, I&amp;rsquo;m trying something different. This is a jupyter notebook that I&amp;rsquo;m using to study some data, and just dumping my brain out in text. If I can easily export this to a format that works with &lt;a href="https://gohugo.io/">hugo&lt;/a>, this might become a common occurrence.&lt;/p>
+&lt;p>For this one, I&amp;rsquo;m leaving the code in. There isn&amp;rsquo;t that much of it, but I think it&amp;rsquo;s fun to show how much visualization per
+line of code you can get with &lt;a href="https://seaborn.pydata.org/">seaborn&lt;/a> and &lt;a href="https://pandas.pydata.org/">pandas&lt;/a>.&lt;/p></description></item><item><title>Moving the blog to Hugo</title><link>https://kaveland.no/posts/2024-05-18-moving-to-hugo/</link><pubDate>Sat, 18 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-18-moving-to-hugo/</guid><description>&lt;p>I&amp;rsquo;ve been using &lt;a href="https://github.com/getpelican/pelican">pelican&lt;/a> for my blog for
+a while now, and I don&amp;rsquo;t really have anything negative to say about it. But for
+a while, I&amp;rsquo;ve been wanting a more minimal theme. I ended up on the front page
+of hacker news a couple of times, and the old theme had my face on all the
+pages, which made me feel a bit uncomfortable. I was looking at some other
+themes around the web, and I found &lt;a href="https://github.com/adityatelange/hugo-PaperMod">PaperMod&lt;/a>
+which I absolutely loved. I followed instructions for how to set it up, and
+it turns out that it only took me an hour or two to get everything up and
+running. I guess I have to give credit to where credit is due, both Hugo and
+PaperMod are really well-made, and easy to use. There&amp;rsquo;s a lot more stuff that
+Hugo can do, but I think I have everything I need set up for now.&lt;/p></description></item></channel></rss>

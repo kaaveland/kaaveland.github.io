@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Scala on Robin's blog</title><link>https://kaveland.no/tags/scala/</link><description>Recent content in Scala on Robin's blog</description><generator>Hugo -- 0.145.0</generator><language>en-us</language><lastBuildDate>Thu, 30 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://kaveland.no/tags/scala/index.xml" rel="self" type="application/rss+xml"/><item><title>Batch operations using composite keys in postgres over jdbc</title><link>https://kaveland.no/posts/2024-08-30-multi-selecting-by-composite-key/</link><pubDate>Fri, 30 Aug 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-08-30-multi-selecting-by-composite-key/</guid><description>&lt;p>Throughout a career as a software developer, you encounter many patterns. Some appear just often
+enough to remember that they exist, but you still need to look them up every time. I&amp;rsquo;ve discovered
+that writing things down helps me remember them more easily. This particular pattern is very useful
+for my current project. So, it&amp;rsquo;s time to write it down and hopefully commit it to memory properly
+this time. Although this post is specific to PostgreSQL, I&amp;rsquo;m sure other databases have the necessary
+features to achieve the same results efficiently.&lt;/p></description></item><item><title>Porting an application from cats effects to ZIO</title><link>https://kaveland.no/posts/2024-05-16-porting-from-cats-effects-to-zio/</link><pubDate>Thu, 16 May 2024 00:00:00 +0000</pubDate><guid>https://kaveland.no/posts/2024-05-16-porting-from-cats-effects-to-zio/</guid><description>&lt;p>In my current project, we&amp;rsquo;re working on a large-ish code base that is written in
+Scala and uses &lt;a href="https://typelevel.org/cats-effect/">cats effect&lt;/a> as an effect
+system in large parts of the code base. If you&amp;rsquo;re not familiar with what an
+effect system is, I think the most important detail is that it&amp;rsquo;s a tool that
+gives you certain superpowers if you promise to be honest about it when your
+code does things that can be considered &amp;ldquo;effectful&amp;rdquo;, such as interacting with
+the network or reading files. We use the &lt;code>IO&lt;/code> monad from cats effect, which is a
+wonderful way of writing async, concurrent code that looks a lot like
+synchronous code.&lt;/p></description></item></channel></rss>
